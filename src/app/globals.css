@@ -1,0 +1,330 @@
+@import "tailwindcss";
+
+/* Heavy motion (pinning, parallax, magnetic, tilt) only on large screens with a fine pointer */
+/*
+ * Heading fallback tuned per weight so the swap to Sora never re-wraps text (no layout shift).
+ * Widths measured against Sora 600/700/800; vertical metrics match Sora (ascent 0.97em, descent 0.29em).
+ */
+@font-face {
+  font-family: "Sora Tuned Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Arial");
+  font-weight: 600;
+  size-adjust: 106.5%;
+  ascent-override: 91.08%;
+  descent-override: 27.23%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Sora Tuned Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Arial");
+  font-weight: 700;
+  size-adjust: 107.28%;
+  ascent-override: 90.42%;
+  descent-override: 27.03%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Sora Tuned Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Arial");
+  font-weight: 800;
+  size-adjust: 107.98%;
+  ascent-override: 89.83%;
+  descent-override: 26.86%;
+  line-gap-override: 0%;
+}
+
+@custom-variant desk (@media (min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference));
+
+@theme {
+  /* Brand — sampled from the AKD Solar logo */
+  --color-sun: #f7931e;
+  --color-sun-deep: #b35900; /* AA text-safe orange on light backgrounds */
+  --color-gold: #ffc93c;
+  --color-akd: #d7141a;
+  --color-solar: #2e8b1e;
+  --color-solar-deep: #22701a;
+  --color-leaf: #7cc520;
+  --color-panel: #1e4fb0;
+  --color-sky: #2ba8e8;
+  --color-navy: #0a1730;
+  --color-navy-2: #12224a;
+  --color-cream: #fbf8f2;
+  --color-sand: #f4eee3;
+  --color-ink: #101828;
+  --color-muted: #475467;
+  --color-line: #e8e0d1;
+  --color-wa: #167a42; /* WhatsApp green, darkened for AA contrast with white text */
+
+  --font-display: var(--font-sora), "Sora", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: var(--font-dm-sans), "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Fluid type scale */
+  --text-hero: clamp(2.25rem, 1.15rem + 4.6vw, 5rem);
+  --text-hero--line-height: 1.04;
+  --text-display: clamp(2.125rem, 1.35rem + 3.3vw, 4.25rem);
+  --text-display--line-height: 1.06;
+  --text-h2: clamp(1.875rem, 1.3rem + 2.2vw, 3.25rem);
+  --text-h2--line-height: 1.1;
+  --text-h3: clamp(1.25rem, 1.12rem + 0.55vw, 1.5rem);
+  --text-h3--line-height: 1.3;
+  --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  --text-lead--line-height: 1.6;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Every card on the site uses this radius (rounded-card). Change it here only. */
+  --radius-card: 5px;
+}
+
+/* Lenis smooth scroll (desktop only — see SmoothScroll.tsx) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Long-form article typography (blog) */
+.prose-akd {
+  color: var(--color-ink);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.prose-akd > * + * {
+  margin-top: 1.25rem;
+}
+.prose-akd h2 {
+  margin-top: 2.75rem;
+  font-size: clamp(1.5rem, 1.3rem + 0.8vw, 1.875rem);
+  line-height: 1.2;
+  font-weight: 700;
+}
+.prose-akd h3 {
+  margin-top: 2rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.prose-akd p,
+.prose-akd li {
+  color: #344054;
+}
+.prose-akd ul,
+.prose-akd ol {
+  padding-left: 1.4rem;
+}
+.prose-akd ul {
+  list-style: disc;
+}
+.prose-akd ol {
+  list-style: decimal;
+}
+.prose-akd li + li {
+  margin-top: 0.5rem;
+}
+.prose-akd li::marker {
+  color: var(--color-sun-deep);
+  font-weight: 700;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-panel);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+
+  .on-dark :focus-visible {
+    outline-color: var(--color-gold);
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-ink);
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+/* Thin solar-panel grid that fades out from the centre — the recurring sunrise motif */
+@utility panel-grid {
+  background-image:
+    linear-gradient(to right, rgb(30 79 176 / 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(30 79 176 / 0.08) 1px, transparent 1px);
+  background-size: 64px 44px;
+  mask-image: radial-gradient(ellipse 70% 60% at 70% 30%, #000 20%, transparent 75%);
+}
+
+@utility panel-grid-dark {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+  background-size: 64px 44px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 0%, #000 15%, transparent 75%);
+}
+
+@utility sun-glow {
+  background: radial-gradient(
+    circle at center,
+    rgb(255 201 60 / 0.55) 0%,
+    rgb(247 147 30 / 0.28) 32%,
+    rgb(247 147 30 / 0.08) 55%,
+    transparent 70%
+  );
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Hide intro elements until GSAP takes over (desktop + JS + motion only, so phones paint the hero instantly for LCP). Failsafe reveals them. */
+@media (min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .js [data-intro] {
+    visibility: hidden;
+    animation: intro-failsafe 0s 2.5s forwards;
+  }
+}
+
+@keyframes intro-failsafe {
+  to {
+    visibility: visible;
+  }
+}
+
+/* Floating WhatsApp pulse */
+@keyframes soft-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+.pulse-ring {
+  animation: soft-pulse 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-ring {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Range sliders (calculator) */
+.range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+  --fill: 50%;
+}
+
+.range::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--color-sun) 0%, var(--color-gold) var(--fill), #e7dfd0 var(--fill));
+}
+
+.range::-moz-range-track {
+  height: 8px;
+  border-radius: 999px;
+  background: #e7dfd0;
+}
+
+.range::-moz-range-progress {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--color-sun), var(--color-gold));
+}
+
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -10px;
+  border-radius: 999px;
+  background: #fff;
+  border: 3px solid var(--color-sun);
+  box-shadow: 0 2px 10px rgb(247 147 30 / 0.35);
+  transition: transform 0.2s;
+}
+
+.range::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #fff;
+  border: 3px solid var(--color-sun);
+  box-shadow: 0 2px 10px rgb(247 147 30 / 0.35);
+}
+
+.range:active::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+
+.range:focus-visible {
+  outline: none;
+}
+
+.range:focus-visible::-webkit-slider-thumb {
+  outline: 3px solid var(--color-panel);
+  outline-offset: 2px;
+}
+
+.range:focus-visible::-moz-range-thumb {
+  outline: 3px solid var(--color-panel);
+  outline-offset: 2px;
+}
