@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3100";
 const OUT = fileURLToPath(new URL("../screenshots/site/", import.meta.url));
-const WIDTHS = [360, 768, 1024, 1440];
+const WIDTHS = [360, 768, 1024, 1440, 1920];
 const PAGES = [
   ["home", "/"],
   ["pm-surya-ghar", "/pm-surya-ghar-yojana"],
@@ -24,7 +24,7 @@ await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch();
 
 async function newPage(width, height = 900) {
-  const ctx = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1 });
+  const ctx = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1, hasTouch: width < 768 });
   const page = await ctx.newPage();
   const errors = [];
   page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
@@ -65,6 +65,35 @@ for (const width of WIDTHS) {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     check(overflow <= 0, `${name}: no horizontal overflow (${overflow}px)`);
     await stitched(page, `${OUT}${name}-${width}.jpg`);
+    if (name === "home") {
+      const g = await page.evaluate(() => {
+        const r = (el) => el.getBoundingClientRect();
+        const b = r(document.querySelector('[aria-roledescription="carousel"]'));
+        const prev = r(document.querySelector('[aria-label="Previous banner"]'));
+        const next = r(document.querySelector('[aria-label="Next banner"]'));
+        const dots = r(document.querySelector('[aria-label="Choose banner"]'));
+        const header = r(document.querySelector("header"));
+        const hit = (a, c) => a.left < c.right && a.right > c.left && a.top < c.bottom && a.bottom > c.top;
+        const mid = b.top + b.height / 2;
+        return {
+          ratio: +(b.width / b.height).toFixed(2),
+          fullWidth: Math.round(b.left) === 0 && Math.round(b.width) === innerWidth,
+          belowHeader: b.top >= header.bottom - 1,
+          prevLeft: Math.round(prev.left - b.left),
+          nextRight: Math.round(b.right - next.right),
+          size: Math.round(prev.width),
+          centred: Math.abs(prev.top + prev.height / 2 - mid) < 2 && Math.abs(next.top + next.height / 2 - mid) < 2,
+          dotsInside: dots.bottom <= b.bottom && dots.top >= b.top,
+          overlap: hit(prev, dots) || hit(next, dots),
+        };
+      });
+      const mobile = width < 768;
+      check(g.ratio === (mobile ? 1 : 3.2), `banner ratio ${g.ratio}`);
+      check(g.fullWidth && g.belowHeader, "banner is edge-to-edge and starts below the header");
+      check(g.size === (mobile ? 36 : 44) && g.prevLeft === (mobile ? 8 : 16) && g.nextRight === (mobile ? 8 : 16), `arrows ${g.size}px, ${g.prevLeft}/${g.nextRight}px from edges`);
+      check(g.centred, "arrows vertically centred");
+      check(g.dotsInside && !g.overlap, "dots inside banner, not covered by arrows");
+    }
     const overflowAfter = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     check(overflowAfter <= 0, `${name}: no overflow after scrolling (${overflowAfter}px)`);
     check(errors.length === 0, `${name}: no console errors${errors.length ? " → " + errors.slice(0, 3).join(" | ") : ""}`);
@@ -86,24 +115,34 @@ console.log("\n== Behaviour");
   const t2 = await strip.textContent();
   check(t1 !== t2 && !t2.includes("–"), `strip countdown ticks (${t1} → ${t2})`);
 
-  // slider
-  const current = () => page.evaluate(() => [...document.querySelectorAll('[aria-label^="Show slide"]')].findIndex((b) => b.getAttribute("aria-current") === "true"));
-  check((await current()) === 0, "slider starts on slide 1");
-  await page.waitForTimeout(6800);
-  check((await current()) === 1, "slider autoplays to slide 2 after 6s");
-  await page.getByRole("button", { name: "Next slide" }).click();
-  check((await current()) === 2, "next arrow → slide 3");
-  await page.getByRole("button", { name: "Show slide 1" }).click();
-  check((await current()) === 0, "dot → slide 1");
-  await page.getByRole("button", { name: "Show slide 1" }).focus();
+  // banner slider
+  const current = () => page.evaluate(() => [...document.querySelectorAll('[aria-label^="Show banner"]')].findIndex((b) => b.getAttribute("aria-current") === "true"));
+  check((await current()) === 0, "slider starts on banner 1");
+  await page.waitForTimeout(5600);
+  check((await current()) === 1, "slider autoplays to banner 2 after 5s");
+  const banner = page.locator('[aria-roledescription="carousel"]');
+  await banner.hover();
+  await page.waitForTimeout(5600);
+  check((await current()) === 1, "hover pauses autoplay");
+  await page.getByRole("button", { name: "Next banner" }).click();
+  check((await current()) === 2, "next arrow → banner 3");
+  await page.getByRole("button", { name: "Next banner" }).click();
+  check((await current()) === 0, "next arrow loops → banner 1");
+  await page.getByRole("button", { name: "Previous banner" }).click();
+  check((await current()) === 2, "previous arrow loops → banner 3");
+  await page.getByRole("button", { name: "Show banner 2" }).click();
+  check((await current()) === 1, "dot → banner 2");
+  await banner.focus();
   await page.keyboard.press("ArrowRight");
-  await page.waitForTimeout(100);
-  check((await current()) === 1, "keyboard ArrowRight → slide 2");
-  await page.waitForTimeout(1000);
-  const visible = await page.evaluate(() => [...document.querySelectorAll("[data-slide]")].map((s) => getComputedStyle(s).visibility));
-  check(visible.filter((v) => v === "visible").length === 1 && visible[1] === "visible", `only slide 2 visible (${visible.join(",")})`);
-  const heights = await page.evaluate(() => [...document.querySelectorAll("[data-slide]")].map((s) => Math.round(s.getBoundingClientRect().height)));
-  check(new Set(heights).size === 1, `slides share one height (${heights.join(",")})`);
+  check((await current()) === 2, "keyboard ArrowRight → banner 3");
+  await page.keyboard.press("ArrowLeft");
+  check((await current()) === 1, "keyboard ArrowLeft → banner 2");
+  await page.waitForTimeout(800);
+  const op = await page.evaluate(() => [...document.querySelectorAll('[aria-roledescription="slide"]')].map((s) => getComputedStyle(s).opacity));
+  check(op.join(",") === "0,1,0", `only banner 2 visible (${op.join(",")})`);
+  const lcp = await page.evaluate(() => [...document.querySelectorAll('[aria-roledescription="slide"] img')].map((i) => i.getAttribute("fetchpriority") ?? "-"));
+  check(lcp[0] === "high" && lcp.slice(1).every((p) => p === "auto"), `priority on first banner only (${lcp.join(",")})`);
+  await page.mouse.move(700, 15);
 
   // dropdown
   await page.getByRole("button", { name: /Solar Solutions/ }).first().click();
@@ -124,6 +163,25 @@ console.log("\n== Behaviour");
   await page.goto(BASE + "/", { waitUntil: "networkidle" });
   const days = await page.locator(".subsidy-strip [data-countdown='days']").first();
   check(await days.isVisible(), "mobile strip shows days only");
+  const swipe = (from, to) =>
+    page.evaluate(
+      ([from, to]) => {
+        const el = document.querySelector('[aria-roledescription="carousel"]');
+        const t = (x) => new Touch({ identifier: 1, target: el, clientX: x, clientY: 300 });
+        el.dispatchEvent(new TouchEvent("touchstart", { bubbles: true, touches: [t(from)], changedTouches: [t(from)] }));
+        el.dispatchEvent(new TouchEvent("touchend", { bubbles: true, touches: [], changedTouches: [t(to)] }));
+        return [...document.querySelectorAll('[aria-label^="Show banner"]')].findIndex((b) => b.getAttribute("aria-current") === "true");
+      },
+      [from, to],
+    );
+  await swipe(300, 80);
+  const afterLeft = await page.evaluate(() => [...document.querySelectorAll('[aria-label^="Show banner"]')].findIndex((b) => b.getAttribute("aria-current") === "true"));
+  check(afterLeft === 1, `swipe left → banner 2 (${afterLeft + 1})`);
+  await swipe(80, 300);
+  const afterRight = await page.evaluate(() => [...document.querySelectorAll('[aria-label^="Show banner"]')].findIndex((b) => b.getAttribute("aria-current") === "true"));
+  check(afterRight === 0, `swipe right → banner 1 (${afterRight + 1})`);
+  const mobileSrc = await page.evaluate(() => document.querySelector('[aria-roledescription="slide"] img').currentSrc);
+  check(mobileSrc.includes("banner-1-mobile"), "mobile uses the square banner");
   await page.getByRole("button", { name: "Open menu" }).click();
   await page.waitForTimeout(600);
   check(await page.locator("#mobile-menu").isVisible(), "mobile menu opens");

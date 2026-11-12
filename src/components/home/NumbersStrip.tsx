@@ -10,7 +10,7 @@ const items = [
 
 export function NumbersStrip() {
   return (
-    <section aria-label="AKD Solar in numbers" className="pb-16 sm:pb-20">
+    <section aria-label="AKD Solar in numbers" className="pt-12 pb-16 sm:pt-16 sm:pb-20">
       <Container>
         <div className="on-dark relative overflow-hidden rounded-card bg-navy text-cream">
           <div aria-hidden className="panel-grid-dark pointer-events-none absolute inset-0" />

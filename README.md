@@ -19,6 +19,9 @@ npm run build && npm start
 | JSON-LD builders | `src/lib/schema.ts` |
 | Card corner radius (one token) | `--radius-card` in `src/app/globals.css` → `rounded-card` |
 
+## Homepage banners
+To change homepage banners: put images in public/images/banners/ (desktop 1920×600, mobile 1080×1080) and edit src/lib/banners.ts.
+
 ## Add a city
 Append one entry to `locations` in `src/lib/locations.ts` (slug, name, region, DISCOM, a genuinely local intro,
 localities, coordinates and 2 city-specific FAQs). The page `/solar-panel-installation/<slug>`, its OG image,
@@ -34,7 +37,7 @@ Connect email/CRM delivery at the marked spot before going live.
 ## Tests
 ```bash
 npm run build && npx next start -p 3100       # terminal 1
-npm run test:responsive                       # terminal 2 — overflow, console, SEO, schema, motion, interactions, screenshots
+npm run test:site                             # terminal 2 — overflow, console, slider, countdown, lightbox, redirects, screenshots
 npm run test:sun                              # CTA rising-sun checks at 6 widths (frames in screenshots/cta-sun)
 npm run test:lighthouse                       # mobile Lighthouse for / and /solar-panel-installation/sonipat
 ```

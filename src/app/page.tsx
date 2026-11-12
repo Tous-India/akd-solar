@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { HeroSlider } from "@/components/home/HeroSlider";
+import { BannerSlider } from "@/components/home/BannerSlider";
 import { NumbersStrip } from "@/components/home/NumbersStrip";
 import { PmTeaser } from "@/components/home/PmTeaser";
 import { HowItWorks } from "@/components/home/HowItWorks";
@@ -23,7 +23,10 @@ export const metadata: Metadata = pageMeta({
 export default function HomePage() {
   return (
     <>
-      <HeroSlider />
+      <h1 className="sr-only">AKD Solar — rooftop solar in Sonipat &amp; Delhi NCR</h1>
+      <div className="pt-[68px] xl:pt-[76px]">
+        <BannerSlider />
+      </div>
       <NumbersStrip />
 
       <section aria-labelledby="solutions-title" className="pb-4">
