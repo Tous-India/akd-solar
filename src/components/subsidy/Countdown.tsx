@@ -73,7 +73,12 @@ export function Countdown({ variant = "inline", tone = "light", className = "" }
   return (
     <span className={`tabular-nums ${className}`} data-countdown="inline">
       <span className="sr-only">{srText}</span>
-      <span aria-hidden>{p ? `${p.days}d ${pad(p.hours)}h ${pad(p.minutes)}m ${pad(p.seconds)}s` : "––d ––h ––m ––s"}</span>
+      <span aria-hidden className="inline-flex gap-2">
+        <span>{p ? p.days : "––"}d</span>
+        <span>{p ? pad(p.hours) : "––"}h</span>
+        <span>{p ? pad(p.minutes) : "––"}m</span>
+        <span>{p ? pad(p.seconds) : "––"}s</span>
+      </span>
     </span>
   );
 }

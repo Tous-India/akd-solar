@@ -23,22 +23,22 @@ export function SubsidyStrip() {
       aria-label="PM Surya Ghar subsidy deadline"
       className="subsidy-strip fixed inset-x-0 top-0 z-[55] h-[var(--strip-h)] overflow-hidden bg-navy text-cream"
     >
-      <div className="mx-auto flex h-full max-w-[1360px] items-center justify-center gap-3 pr-11 pl-4 text-[0.82rem] sm:text-sm">
-        <Link href="/pm-surya-ghar-yojana" className="flex min-w-0 items-center gap-2 hover:text-gold">
+      <div className="mx-auto flex h-full max-w-[1360px] items-center justify-center pr-11 pl-4 text-[0.82rem] tracking-[0.01em] whitespace-nowrap sm:text-sm">
+        <Link href="/pm-surya-ghar-yojana" className="flex min-w-0 items-center gap-2 hover:text-gold md:gap-4">
           <span className="hidden truncate sm:inline">PM Surya Ghar subsidy closes 31 March 2027</span>
           <span className="truncate sm:hidden">PM Surya Ghar subsidy</span>
           <span aria-hidden className="text-cream/40">
             ·
           </span>
-          <span className="font-semibold text-gold">
-            <Countdown className="hidden md:inline" />
+          <span className="inline-flex shrink-0 items-center gap-2 font-semibold text-gold">
+            <Countdown className="hidden md:inline-flex" />
             <DaysLeft className="md:hidden" />
-            <span className="hidden md:inline"> left</span>
+            <span className="hidden md:inline">left</span>
           </span>
           <span aria-hidden className="hidden text-cream/40 sm:inline">
             ·
           </span>
-          <span className="hidden shrink-0 items-center gap-1 font-semibold underline-offset-4 hover:underline sm:inline-flex">
+          <span className="hidden shrink-0 items-center gap-1.5 font-semibold underline-offset-4 hover:underline sm:inline-flex">
             Check your subsidy <Icon name="arrowRight" className="size-3.5" />
           </span>
           <Icon name="arrowRight" className="size-3.5 shrink-0 sm:hidden" />
