@@ -1,54 +1,59 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/ui/PageHero";
+import { Reveal } from "@/components/motion/Reveal";
 import { ProjectsGallery } from "@/components/projects/ProjectsGallery";
-import { CtaBand } from "@/components/home/CtaBand";
-import { projects } from "@/lib/data";
-import { formatLakh, formatNumber } from "@/lib/format";
+import { InlineCta } from "@/components/solutions/Blocks";
+import { offgridVillages } from "@/lib/data";
+import { imageDims } from "@/lib/projects.generated";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
-  title: "Solar Projects in Haryana & Delhi NCR",
-  description:
-    "Solar installations for homes, factories, schools and farms across Haryana and Delhi NCR, with capacity and annual savings.",
+  title: "Our Projects — Solar Installations",
+  description: "Photos of AKD Solar rooftop installations for homes and businesses in Sonipat, Rohtak, Jhajjar and nearby, plus off-grid systems in 21 villages.",
   path: "/projects",
 });
 
-export default function ProjectsPage() {
-  const totalKw = projects.reduce((s, p) => s + p.capacityKw, 0);
-  const totalSavings = projects.reduce((s, p) => s + p.annualSavings, 0);
+const COLLAGE = "/images/projects/offgrid-villages-collage.jpg";
 
+export default function ProjectsPage() {
+  const collage = imageDims[COLLAGE];
   return (
     <>
-      <PageHero
-        crumbs={[{ name: "Projects", path: "/projects" }]}
-        eyebrow="Our work"
-        title={
-          <>
-            Real roofs. Real <span className="text-solar">savings</span>.
-          </>
-        }
-        subtitle="A selection of recent installations. Every number below comes from the customer's own bills after one full year of generation."
-      >
-        <dl className="flex flex-wrap gap-x-10 gap-y-4">
-          <div>
-            <dt className="text-sm text-muted">Capacity shown</dt>
-            <dd className="font-display text-2xl font-bold tracking-tight">{formatNumber(totalKw, 1)} kW</dd>
-          </div>
-          <div>
-            <dt className="text-sm text-muted">Combined yearly savings</dt>
-            <dd className="font-display text-2xl font-bold tracking-tight text-solar-deep">{formatLakh(totalSavings)}</dd>
-          </div>
-        </dl>
-      </PageHero>
+      <PageHero crumbs={[{ name: "Projects", path: "/projects" }]} title="Our Projects" />
 
-      <section aria-label="Project gallery" className="pb-8">
-        <Container>
-          <ProjectsGallery />
-        </Container>
-      </section>
+      <Container>
+        <ProjectsGallery />
 
-      <CtaBand title="Want your roof in this gallery next?" />
+        <section aria-labelledby="offgrid-title" className="mt-16 grid items-start gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
+          <Reveal variant="clip" className="overflow-hidden rounded-card border border-line">
+            <Image
+              src={COLLAGE}
+              alt="Off-grid solar installations in villages around Sonipat"
+              width={collage.width}
+              height={collage.height}
+              sizes="(min-width: 1024px) 55vw, 100vw"
+              className="h-auto w-full"
+            />
+          </Reveal>
+          <Reveal>
+            <h2 id="offgrid-title" className="text-h2 font-bold text-ink">
+              Off-grid in villages
+            </h2>
+            <p className="mt-2 text-muted">Battery-backed systems where grid supply is unreliable.</p>
+            <ul className="mt-5 flex flex-wrap gap-2">
+              {offgridVillages.map((v) => (
+                <li key={v} className="rounded-full border border-line bg-white px-3 py-1.5 text-sm font-medium text-ink">
+                  {v}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </section>
+
+        <InlineCta title="Want your roof here next?" />
+      </Container>
     </>
   );
 }

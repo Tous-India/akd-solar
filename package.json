@@ -7,10 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:responsive": "node scripts/responsive-test.mjs",
+    "test:site": "node scripts/site-test.mjs",
     "test:sun": "node scripts/cta-sun-test.mjs",
-    "test:lighthouse": "node scripts/lighthouse.mjs",
-    "test:hero": "node scripts/hero-test.mjs"
+    "test:lighthouse": "node scripts/lighthouse.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

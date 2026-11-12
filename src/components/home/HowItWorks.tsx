@@ -53,17 +53,17 @@ export function HowItWorks() {
   );
 
   return (
-    <section ref={ref} className="bg-sand py-20 sm:py-28">
+    <section ref={ref} className="overflow-x-clip bg-sand py-20 sm:py-28">
       <Container className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <div className="lg:sticky lg:top-32 lg:self-start">
           <SectionHeading
             eyebrow="How it works"
-            title="From first call to free electricity in six calm steps."
-            subtitle="No running between offices. One project manager, one WhatsApp group, and clear timelines you can hold us to."
+            title="Four simple steps"
+            subtitle="One team from site visit to subsidy."
           />
           <div className="mt-8">
             <Button href="/contact" magnetic>
-              Book my free survey
+              Book a free site visit
             </Button>
           </div>
         </div>

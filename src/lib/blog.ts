@@ -88,7 +88,7 @@ export const posts: Post[] = [
       { type: "h2", text: "How long until the money arrives?" },
       { type: "p", text: "The subsidy is released after commissioning, typically within about 30 days of submitting your bank details, though timelines depend on portal processing." },
       { type: "h2", text: "Is there any extra Haryana state subsidy?" },
-      { type: "p", text: "Haryana has announced additional support for some low-income households alongside PM Surya Ghar. Eligibility and amounts change, so we check what currently applies during your free survey rather than quoting a figure that may be out of date." },
+      { type: "p", text: "In June 2024 the Haryana Government announced an extra ₹50,000 for families with an annual income up to ₹1.8 lakh, and ₹20,000 for ₹1.8–3 lakh, on top of PM Surya Ghar. Confirm the current status with DHBVN or UHBVN — we check it for you during the site visit." },
     ],
     faqs: [
       { q: "Can I get the subsidy for a 5 kW system?", a: "Yes, but the subsidy stays at the ₹78,000 maximum. The extra capacity is paid for by you." },
@@ -96,9 +96,9 @@ export const posts: Post[] = [
       { q: "Can I get a loan for the rest of the cost?", a: "Yes. Banks offer collateral-free solar loans under the scheme; many families find the EMI is lower than the bill it replaces." },
     ],
     related: [
-      { label: "Solar subsidy & savings calculator", href: "/calculator" },
+      { label: "PM Surya Ghar Yojana", href: "/pm-surya-ghar-yojana" },
       { label: "Net-metering with UHBVN and DHBVN", href: "/blog/net-metering-process-uhbvn-dhbvn" },
-      { label: "Residential rooftop solar", href: "/services/residential-rooftop-solar" },
+      { label: "Residential rooftop solar", href: "/solar-solutions/residential-rooftop" },
     ],
   },
   {
@@ -154,8 +154,7 @@ export const posts: Post[] = [
     ],
     related: [
       { label: "Calculate your exact cost", href: "/calculator" },
-      { label: "Solar in Delhi", href: "/solar-panel-installation/delhi" },
-      { label: "Solar in Noida", href: "/solar-panel-installation/noida" },
+      { label: "Solar in Delhi NCR", href: "/solar-panel-installation/delhi-ncr" },
       { label: "Solar in Gurugram", href: "/solar-panel-installation/gurugram" },
     ],
   },
@@ -211,7 +210,7 @@ export const posts: Post[] = [
       { q: "Do batteries get the subsidy?", a: "No. PM Surya Ghar subsidises solar panel capacity, not batteries." },
     ],
     related: [
-      { label: "On-grid, off-grid & hybrid systems", href: "/services/on-grid-off-grid-hybrid-solar" },
+      { label: "Residential rooftop solar", href: "/solar-solutions/residential-rooftop" },
       { label: "3 kW system cost in Delhi NCR", href: "/blog/3kw-solar-system-cost-delhi-ncr" },
       { label: "Savings calculator", href: "/calculator" },
     ],
@@ -335,10 +334,9 @@ export const posts: Post[] = [
       { q: "How long does a 100 kW installation take?", a: "Typically 3–4 weeks on site, planned around your production shifts." },
     ],
     related: [
-      { label: "Commercial & industrial solar", href: "/services/commercial-solar" },
+      { label: "Commercial & individual solar", href: "/solar-solutions/commercial-and-individual" },
       { label: "Solar in Panipat", href: "/solar-panel-installation/panipat" },
-      { label: "Solar in Bahadurgarh", href: "/solar-panel-installation/bahadurgarh" },
-      { label: "Solar in Rewari", href: "/solar-panel-installation/rewari" },
+      { label: "PM Surya Ghar Yojana", href: "/pm-surya-ghar-yojana" },
     ],
   },
 ];

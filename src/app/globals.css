@@ -59,15 +59,16 @@
   --font-sans: var(--font-dm-sans), "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
   /* Fluid type scale */
-  --text-hero: clamp(2.25rem, 1.15rem + 4.6vw, 5rem);
-  --text-hero--line-height: 1.04;
-  --text-display: clamp(2.125rem, 1.35rem + 3.3vw, 4.25rem);
-  --text-display--line-height: 1.06;
-  --text-h2: clamp(1.875rem, 1.3rem + 2.2vw, 3.25rem);
-  --text-h2--line-height: 1.1;
-  --text-h3: clamp(1.25rem, 1.12rem + 0.55vw, 1.5rem);
-  --text-h3--line-height: 1.3;
-  --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  /* Site-wide type scale: h1 / h2 / h3 / intro */
+  --text-hero: clamp(2rem, 4vw, 3rem);
+  --text-hero--line-height: 1.1;
+  --text-display: clamp(2rem, 4vw, 3rem);
+  --text-display--line-height: 1.1;
+  --text-h2: clamp(1.5rem, 3vw, 2.25rem);
+  --text-h2--line-height: 1.15;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.35;
+  --text-lead: 1.0625rem;
   --text-lead--line-height: 1.6;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -140,10 +141,18 @@ html.lenis body {
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    scroll-padding-top: 6rem;
+    scroll-padding-top: calc(6rem + var(--strip-h));
+    /* Height of the PM Surya Ghar countdown strip (0 once dismissed) */
+    --strip-h: 34px;
+  }
+
+  html[data-strip="off"] {
+    --strip-h: 0px;
   }
 
   body {
+    font-size: 1rem;
+    line-height: 1.6;
     background: var(--color-cream);
     color: var(--color-ink);
     font-family: var(--font-sans);
@@ -327,4 +336,9 @@ html.lenis body {
 .range:focus-visible::-moz-range-thumb {
   outline: 3px solid var(--color-panel);
   outline-offset: 2px;
+}
+
+/* Dismissed subsidy strip is removed entirely (not just collapsed) so it leaves the tab order */
+html[data-strip="off"] .subsidy-strip {
+  display: none;
 }

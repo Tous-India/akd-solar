@@ -1,7 +1,7 @@
-import { faqs, services, subsidyTiers } from "./data";
-import { cityFaqs, locations, locationsByRegion, regions } from "./locations";
+import { haryanaTopUp, msme, pmFaqs, solutions, subsidyTable } from "./data";
+import { cityFaqs, locations } from "./locations";
 import { posts } from "./blog";
-import { absoluteUrl, fullAddress, site } from "./site";
+import { absoluteUrl, formatOffice, site } from "./site";
 import { formatINR } from "./format";
 
 /** /llms.txt — a concise, factual Markdown summary for AI assistants. */
@@ -12,26 +12,35 @@ export function llmsTxt() {
     `> ${site.description}`,
     "",
     "## Key facts",
-    `- Business: ${site.name} ("${site.tagline}"), rooftop solar design and installation company`,
-    `- Office: ${fullAddress}`,
-    `- Phone / WhatsApp: ${site.phone}`,
+    `- Legal name: ${site.legalName} (CIN ${site.cin}, GSTIN ${site.gstin})`,
+    `- Founded: ${site.foundedYear}, Sonipat, Haryana. Authorised Havells dealer since ${site.havellsDealerSince}.`,
+    `- Founder: ${site.founder.name} — ${site.founder.qualifications.join("; ")}; ${site.founder.experience}`,
+    ...site.offices.map((o) => `- ${o.label}: ${formatOffice(o)}`),
+    `- Phone / WhatsApp: ${site.phones.join(", ")}`,
     `- Email: ${site.email}`,
     `- Website: ${site.url}`,
-    `- Hours: ${site.hours.map((h) => `${h.days} ${h.time}`).join("; ")}`,
-    `- Service area: ${locations.length} cities in ${regions.join(" and ")}`,
-    `- Subsidy: PM Surya Ghar central subsidy for homes — ${subsidyTiers.map((t) => `${t.kw}: ${formatINR(t.amount)}`).join(", ")} (maximum ₹78,000)`,
+    `- Track record: ${site.numbers.years} years, ${site.numbers.installations} on-grid installations, ${site.numbers.customers} solar customers; installation in as little as ${site.numbers.installDays} days`,
+    `- Panels installed: ${site.brands.panels.join(", ")}. Inverters: ${site.brands.inverters.join(", ")}.`,
+    `- Solar loans: residential ${site.loans.residential.rate} via ${site.loans.residential.banks.join(", ")}; industrial ${site.loans.industrial.rate}`,
+    `- Areas served: ${locations.map((l) => l.name).join(", ")}`,
     "",
-    "## Services",
-    ...services.map((s) => `- [${s.title}](${absoluteUrl(`/services/${s.slug}`)}): ${s.short}`),
+    "## PM Surya Ghar subsidy",
+    ...subsidyTable.map((t) => `- ${t.kw}: ${formatINR(t.amount)} (central subsidy, capped at ₹78,000 for 3 kW and above)`),
+    ...haryanaTopUp.map((t) => `- Haryana top-up, ${t.income}: ${formatINR(t.amount)} (announced June 2024; confirm current status with DHBVN/UHBVN)`),
+    `- Scheme closes 31 March 2027. Portal: ${site.pmSuryaGharPortal}`,
+    `- Details: ${absoluteUrl("/pm-surya-ghar-yojana")}`,
+    "",
+    "## Solar solutions",
+    ...solutions.map((s) => `- [${s.title}](${absoluteUrl(`/solar-solutions/${s.slug}`)}): ${s.short}`),
     "",
     "## Areas served",
-    ...regions.map((r) => `- ${r}: ${locationsByRegion(r).map((l) => `[${l.name}](${absoluteUrl(`/solar-panel-installation/${l.slug}`)})`).join(", ")}`),
+    ...locations.map((l) => `- [${l.name}](${absoluteUrl(`/solar-panel-installation/${l.slug}`)})`),
     "",
     "## Key pages",
-    `- [Solar savings & subsidy calculator](${absoluteUrl("/calculator")})`,
-    `- [Areas we serve](${absoluteUrl("/locations")})`,
-    `- [About AKD Solar](${absoluteUrl("/about")})`,
-    `- [Contact / free site survey](${absoluteUrl("/contact")})`,
+    `- [Projects](${absoluteUrl("/projects")})`,
+    `- [Solar calculator](${absoluteUrl("/calculator")})`,
+    `- [About](${absoluteUrl("/about")})`,
+    `- [Contact](${absoluteUrl("/contact")})`,
     "",
     "## Guides",
     ...posts.map((p) => `- [${p.title}](${absoluteUrl(`/blog/${p.slug}`)}): ${p.quickAnswer.a}`),
@@ -44,24 +53,24 @@ export function llmsTxt() {
   return lines.join("\n");
 }
 
-/** /llms-full.txt — the same facts plus FAQs, per-city details and article answers. */
+/** /llms-full.txt — the same facts plus FAQs, solution and city details, and article answers. */
 export function llmsFullTxt() {
-  const out: string[] = [llmsTxt(), "", "---", "", "## Frequently asked questions", ""];
-  for (const f of faqs) out.push(`### ${f.q}`, f.a, "");
-  out.push("## Services in detail", "");
-  for (const s of services) {
-    out.push(`### ${s.title}`, `URL: ${absoluteUrl(`/services/${s.slug}`)}`, s.description, "", ...s.features.map((f) => `- ${f}`), "");
-    for (const f of [s.quickAnswer, ...s.faqs]) out.push(`**${f.q}** ${f.a}`, "");
+  const out: string[] = [llmsTxt(), "", "---", "", "## PM Surya Ghar FAQ", ""];
+  for (const f of pmFaqs) out.push(`### ${f.q}`, f.a, "");
+  out.push("## Solar solutions in detail", "");
+  for (const s of solutions) {
+    out.push(`### ${s.title}`, `URL: ${absoluteUrl(`/solar-solutions/${s.slug}`)}`, s.intro, "", ...s.whatYouGet.map((w) => `- ${w}`), "");
+    if (s.msme) out.push(`${msme.title}:`, ...msme.points.map((m) => `- ${m}`), msme.note, "");
+    for (const f of s.faqs) out.push(`**${f.q}** ${f.a}`, "");
   }
   out.push("## Cities", "");
   for (const l of locations) {
     out.push(
-      `### ${l.name} (${l.region})`,
+      `### ${l.name}`,
       `URL: ${absoluteUrl(`/solar-panel-installation/${l.slug}`)}`,
       `- DISCOM: ${l.discom.name}`,
-      `- Served from: ${l.slug === site.address.citySlug ? "our office in this city" : `our ${site.address.city} office`}`,
+      `- Served from: our Sonipat offices`,
       `- Localities: ${l.localities.join(", ")}`,
-      `- Generation: ${l.sunshine}`,
       "",
       l.intro.join(" "),
       "",

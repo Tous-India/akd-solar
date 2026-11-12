@@ -114,7 +114,6 @@ export default async function BlogPost({ params }: Props) {
           { name: "Blog", path: "/blog" },
           { name: post.metaTitle, path: `/blog/${post.slug}` },
         ]}
-        eyebrow={post.category}
         title={post.title}
         subtitle={
           <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-base">

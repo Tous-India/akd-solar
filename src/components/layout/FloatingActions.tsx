@@ -56,7 +56,7 @@ export function FloatingActions() {
         >
           <div className="flex items-center gap-3 py-3 pr-[5.5rem] pl-4 sm:pr-24 sm:pl-6">
             <a
-              href={telHref}
+              href={telHref()}
               aria-label="Call AKD Solar"
               className="flex size-12 shrink-0 items-center justify-center rounded-full border border-ink/15 bg-white text-ink"
             >

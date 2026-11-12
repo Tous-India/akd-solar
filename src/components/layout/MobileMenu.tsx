@@ -6,8 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { gsap, prefersReducedMotion, useGSAP } from "@/lib/gsap";
 import { nav, site, telHref, whatsappHref } from "@/lib/site";
-import { services } from "@/lib/data";
-import { locationsByRegion, regions } from "@/lib/locations";
+import { menuLinks } from "./menuLinks";
 
 type Props = { open: boolean; onClose: () => void; pathname: string };
 
@@ -15,7 +14,7 @@ export function MobileMenu({ open, onClose, pathname }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const tl = useRef<gsap.core.Timeline | null>(null);
-  const [openSection, setOpenSection] = useState<"services" | "locations" | null>(null);
+  const [openSection, setOpenSection] = useState<"solutions" | "locations" | null>(null);
 
   useGSAP(
     () => {
@@ -86,7 +85,7 @@ export function MobileMenu({ open, onClose, pathname }: Props) {
       aria-modal="true"
       aria-label="Site menu"
       aria-hidden={!open}
-      className="fixed inset-0 z-[70] hidden flex-col overflow-y-auto overscroll-contain bg-cream lg:hidden"
+      className="fixed inset-0 z-[70] hidden flex-col overflow-y-auto overscroll-contain bg-cream xl:hidden"
       style={{
         paddingTop: "env(safe-area-inset-top)",
         paddingBottom: "env(safe-area-inset-bottom)",
@@ -124,7 +123,7 @@ export function MobileMenu({ open, onClose, pathname }: Props) {
                   ? pathname.startsWith("/locations") || pathname.startsWith("/solar-panel-installation")
                   : pathname.startsWith(item.href);
             const base =
-              "flex min-h-14 w-full items-center justify-between gap-4 border-b border-line py-2.5 font-display text-[1.6rem] font-bold tracking-tight sm:text-4xl";
+              "flex min-h-13 w-full items-center justify-between gap-4 border-b border-line py-2 font-display text-[1.35rem] font-bold tracking-tight sm:text-3xl";
             if (item.menu) {
               const kind = item.menu;
               const expanded = openSection === kind;
@@ -149,51 +148,21 @@ export function MobileMenu({ open, onClose, pathname }: Props) {
                       className={`grid transition-[grid-template-rows] duration-500 ease-out-expo ${expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
                     >
                       <div className="overflow-hidden" inert={!expanded}>
-                        {kind === "services" ? (
-                          <ul>
-                            {services.map((s) => (
-                              <li key={s.slug}>
-                                <Link
-                                  href={`/services/${s.slug}`}
-                                  onClick={onClose}
-                                  className="flex min-h-12 items-center gap-3 py-2 text-base font-medium text-ink/80 hover:text-ink"
-                                >
-                                  <span className="flex size-9 items-center justify-center rounded-lg bg-white text-panel">
-                                    <Icon name={s.icon} className="size-[18px]" />
-                                  </span>
-                                  {s.title}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <div className="space-y-4 pt-2">
-                            {regions.map((region) => (
-                              <div key={region}>
-                                <p className="text-xs font-bold tracking-[0.14em] text-sun-deep uppercase">{region}</p>
-                                <ul className="mt-1 grid grid-cols-2 gap-x-3 min-[480px]:grid-cols-3">
-                                  {locationsByRegion(region).map((l) => (
-                                    <li key={l.slug}>
-                                      <Link
-                                        href={`/solar-panel-installation/${l.slug}`}
-                                        onClick={onClose}
-                                        className="flex min-h-11 items-center text-base font-medium text-ink/80 hover:text-ink"
-                                      >
-                                        {l.name}
-                                      </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                        <ul>
+                          {menuLinks[kind].map((l) => (
+                            <li key={l.href}>
+                              <Link href={l.href} onClick={onClose} className="flex min-h-11 items-center text-base font-medium text-ink/80 hover:text-ink">
+                                {l.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
                         <Link
                           href={item.href}
                           onClick={onClose}
                           className="flex min-h-12 items-center gap-2 pb-3 font-semibold text-panel"
                         >
-                          {kind === "services" ? "All services" : "All areas we serve"} <Icon name="arrowRight" className="size-4" />
+                          {kind === "solutions" ? "All solar solutions" : "All areas we serve"} <Icon name="arrowRight" className="size-4" />
                         </Link>
                       </div>
                     </div>
@@ -224,9 +193,9 @@ export function MobileMenu({ open, onClose, pathname }: Props) {
             onClick={onClose}
             className="flex min-h-14 items-center justify-center gap-2 rounded-full bg-sun px-6 font-semibold text-ink sm:col-span-2"
           >
-            Get Free Site Survey <Icon name="arrowRight" className="size-5" />
+            Get Free Quote <Icon name="arrowRight" className="size-5" />
           </Link>
-          <a href={telHref} className="flex min-h-14 items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-6 font-semibold text-ink">
+          <a href={telHref()} className="flex min-h-14 items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-6 font-semibold text-ink">
             <Icon name="phone" className="size-5" /> {site.phone}
           </a>
           <a

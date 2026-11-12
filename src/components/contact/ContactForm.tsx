@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { gsap, MQ, useGSAP } from "@/lib/gsap";
 import { whatsappHref } from "@/lib/site";
-import { services } from "@/lib/data";
+import { solutions } from "@/lib/data";
 
 type Fields = { name: string; phone: string; email: string; city: string; bill: string; message: string; company: string };
 type Errors = Partial<Record<keyof Fields, string>>;
@@ -26,7 +26,7 @@ function validate(f: Fields): Errors {
   return e;
 }
 
-export function ContactForm({ defaultCity = "", title = "Book your free site survey" }: { defaultCity?: string; title?: string } = {}) {
+export function ContactForm({ defaultCity = "", title = "Book a free site visit" }: { defaultCity?: string; title?: string } = {}) {
   const initial: Fields = { ...blank, city: defaultCity };
   const [fields, setFields] = useState<Fields>(initial);
   const [errors, setErrors] = useState<Errors>({});
@@ -38,7 +38,7 @@ export function ContactForm({ defaultCity = "", title = "Book your free site sur
   // Pre-select a service passed as ?service=slug
   useEffect(() => {
     const slug = new URLSearchParams(window.location.search).get("service");
-    const svc = services.find((s) => s.slug === slug);
+    const svc = solutions.find((s) => s.slug === slug);
     if (svc) setFields((f) => ({ ...f, message: f.message || `I'm interested in ${svc.title}.` }));
   }, []);
 
@@ -160,7 +160,7 @@ export function ContactForm({ defaultCity = "", title = "Book your free site sur
             type="tel"
             inputMode="tel"
             autoComplete="tel"
-            placeholder="98765 43210"
+            placeholder="10-digit mobile number"
             value={fields.phone}
             onChange={update("phone")}
             onBlur={blur("phone")}

@@ -16,8 +16,8 @@ const warmStyle = {
 } as CSSProperties;
 
 export function CtaBand({
-  title = "Your roof could start paying you back next month.",
-  text = "Book a free, no-obligation site survey. An AKD engineer will visit, check your roof and give you a written quote with subsidy and savings — within 48 hours.",
+  title = "Get a free site visit",
+  text = "We check your roof and bills, then send a clear quote with subsidy and savings.",
 }: Props) {
   return (
     <section className="py-20 sm:py-28">
@@ -50,11 +50,11 @@ export function CtaBand({
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <div data-sun-reveal className="flex flex-col">
                   <Button href="/contact" variant="dark" size="lg" magnetic>
-                    Get Free Site Survey
+                    Get Free Quote
                   </Button>
                 </div>
                 <div data-sun-reveal className="flex flex-col">
-                  <Button href={telHref} variant="light" size="lg" icon={null} iconLeft="phone">
+                  <Button href={telHref()} variant="light" size="lg" icon={null} iconLeft="phone">
                     Call {site.phone}
                   </Button>
                 </div>

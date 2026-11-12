@@ -1,60 +1,46 @@
 /**
- * Indicative solar savings model. Tariffs and yields are typical averages, not quotes.
+ * Indicative solar sizing, based on the DHBVN/UHBVN consumer guide:
+ *   required kW = monthly units ÷ 120  (1 kW ≈ 120 units a month)
+ *   recommended  = required × 1.1 to × 1.2  (room for future load)
+ *   roof area    ≈ 80–100 sq ft per kW
+ * Tariffs and costs are typical averages, not quotes.
  */
 export type ConsumerType = "residential" | "commercial";
 
-export type StateInfo = {
-  id: string;
-  name: string;
-  /** average ₹/unit for residential (upper slabs) and commercial consumers */
-  tariff: number;
-  commercialTariff: number;
-  /** typical generation, kWh per kW per day */
-  yield: number;
-};
+export type StateInfo = { id: string; name: string; tariff: number; commercialTariff: number };
 
 export const STATES: StateInfo[] = [
-  { id: "andhra-pradesh", name: "Andhra Pradesh", tariff: 7, commercialTariff: 9, yield: 4.3 },
-  { id: "bihar", name: "Bihar", tariff: 7.5, commercialTariff: 9, yield: 3.9 },
-  { id: "delhi", name: "Delhi", tariff: 6.5, commercialTariff: 9.5, yield: 4.1 },
-  { id: "gujarat", name: "Gujarat", tariff: 6, commercialTariff: 8, yield: 4.5 },
-  { id: "haryana", name: "Haryana", tariff: 6.5, commercialTariff: 8, yield: 4.1 },
-  { id: "karnataka", name: "Karnataka", tariff: 7, commercialTariff: 9.5, yield: 4.3 },
-  { id: "kerala", name: "Kerala", tariff: 6.5, commercialTariff: 8.5, yield: 3.9 },
-  { id: "madhya-pradesh", name: "Madhya Pradesh", tariff: 7, commercialTariff: 9, yield: 4.4 },
-  { id: "maharashtra", name: "Maharashtra", tariff: 9.5, commercialTariff: 12, yield: 4.2 },
-  { id: "odisha", name: "Odisha", tariff: 6, commercialTariff: 7.5, yield: 4 },
-  { id: "punjab", name: "Punjab", tariff: 7, commercialTariff: 8, yield: 4.1 },
-  { id: "rajasthan", name: "Rajasthan", tariff: 7.5, commercialTariff: 9.5, yield: 4.6 },
-  { id: "tamil-nadu", name: "Tamil Nadu", tariff: 6.5, commercialTariff: 9, yield: 4.3 },
-  { id: "telangana", name: "Telangana", tariff: 7.5, commercialTariff: 9.5, yield: 4.3 },
-  { id: "uttar-pradesh", name: "Uttar Pradesh", tariff: 6.5, commercialTariff: 8.5, yield: 4 },
-  { id: "uttarakhand", name: "Uttarakhand", tariff: 6, commercialTariff: 7.5, yield: 3.9 },
-  { id: "west-bengal", name: "West Bengal", tariff: 8, commercialTariff: 9, yield: 3.8 },
+  { id: "haryana", name: "Haryana", tariff: 6.5, commercialTariff: 8 },
+  { id: "delhi", name: "Delhi", tariff: 6.5, commercialTariff: 9.5 },
+  { id: "uttar-pradesh", name: "Uttar Pradesh (Noida, Ghaziabad)", tariff: 6.5, commercialTariff: 8.5 },
 ];
 
 export const DEFAULT_STATE = "haryana";
 
-/** Shadow-free roof area needed per kW */
-export const SQFT_PER_KW = 100;
-/** Grid emission factor, tonnes CO2 per MWh (CEA, approx.) */
+export const UNITS_PER_KW_MONTH = 120;
+export const FUTURE_LOAD = { min: 1.1, max: 1.2 };
+export const SQFT_PER_KW = { min: 80, max: 100 };
+
 const CO2_T_PER_MWH = 0.71;
 const TARIFF_ESCALATION = 0.03;
 const PANEL_DEGRADATION = 0.005;
 const YEARS = 25;
+/** ~10% of a bill is fixed charges and duty that solar can't offset (used only in bill mode) */
 const FIXED_CHARGE_SHARE = 0.1;
 
 export const LIMITS = {
-  residential: { billMin: 500, billMax: 30000, billStep: 100, roofMin: 100, roofMax: 5000, roofStep: 50 },
-  commercial: { billMin: 5000, billMax: 500000, billStep: 1000, roofMin: 500, roofMax: 50000, roofStep: 100 },
+  residential: { unitsMin: 50, unitsMax: 2000, unitsStep: 10, billMin: 500, billMax: 20000, billStep: 100 },
+  commercial: { unitsMin: 200, unitsMax: 60000, unitsStep: 100, billMin: 2000, billMax: 500000, billStep: 1000 },
 } as const;
 
-/** PM Surya Ghar: ₹30,000/kW up to 2 kW, ₹18,000 for the 3rd kW, capped at ₹78,000 (residential only) */
+/** PM Surya Ghar central subsidy: ₹30,000/kW for the first 2 kW, ₹18,000 for the 3rd kW, capped at ₹78,000 */
 export function pmSuryaGharSubsidy(kw: number) {
   const firstTwo = Math.min(kw, 2) * 30000;
   const third = Math.max(0, Math.min(kw - 2, 1)) * 18000;
   return Math.min(78000, firstTwo + third);
 }
+
+const roundHalf = (n: number) => Math.max(1, Math.ceil(n * 2) / 2);
 
 function costPerKw(kw: number, type: ConsumerType) {
   if (type === "commercial") return kw <= 50 ? 48000 : 42000;
@@ -63,26 +49,30 @@ function costPerKw(kw: number, type: ConsumerType) {
   return 50000;
 }
 
-export type CalcInput = { bill: number; stateId: string; roofArea: number; type: ConsumerType };
-
-export function calculate({ bill, stateId, roofArea, type }: CalcInput) {
-  const state = STATES.find((s) => s.id === stateId) ?? STATES.find((s) => s.id === DEFAULT_STATE)!;
+export function unitsFromBill(bill: number, stateId: string, type: ConsumerType) {
+  const state = STATES.find((s) => s.id === stateId) ?? STATES[0];
   const tariff = type === "residential" ? state.tariff : state.commercialTariff;
-  // ~10% of a bill is fixed charges and duty that solar can't offset
-  const monthlyUnits = (bill * (1 - FIXED_CHARGE_SHARE)) / tariff;
-  const unitsPerKwMonth = state.yield * 30;
+  return Math.round((bill * (1 - FIXED_CHARGE_SHARE)) / tariff);
+}
 
-  const idealKw = monthlyUnits / unitsPerKwMonth;
-  const roofMaxKw = roofArea / SQFT_PER_KW;
-  const roofLimited = idealKw > roofMaxKw;
-  const kw = Math.max(1, Math.round(Math.min(idealKw, roofMaxKw) * 2) / 2);
+export type CalcInput = { units: number; stateId: string; type: ConsumerType };
+
+export function calculate({ units, stateId, type }: CalcInput) {
+  const state = STATES.find((s) => s.id === stateId) ?? STATES[0];
+  const tariff = type === "residential" ? state.tariff : state.commercialTariff;
+
+  const requiredKw = units / UNITS_PER_KW_MONTH;
+  const recommendedMin = roundHalf(requiredKw * FUTURE_LOAD.min);
+  const recommendedMax = Math.max(recommendedMin, roundHalf(requiredKw * FUTURE_LOAD.max));
+  // Cost, subsidy and savings use the lower recommended size
+  const kw = recommendedMin;
 
   const cost = kw * costPerKw(kw, type);
   const subsidy = type === "residential" ? pmSuryaGharSubsidy(kw) : 0;
   const netCost = cost - subsidy;
 
-  const yearlyUnits = kw * unitsPerKwMonth * 12;
-  const yearlySavings = Math.min(yearlyUnits, monthlyUnits * 12) * tariff;
+  const yearlyUnits = kw * UNITS_PER_KW_MONTH * 12;
+  const yearlySavings = Math.min(yearlyUnits, units * 12) * tariff;
   const paybackYears = yearlySavings > 0 ? netCost / yearlySavings : 0;
 
   let lifetimeGross = 0;
@@ -93,15 +83,16 @@ export function calculate({ bill, stateId, roofArea, type }: CalcInput) {
     lifetimeUnits += yearlyUnits * output;
   }
 
-  const co2Lifetime = (lifetimeUnits / 1000) * CO2_T_PER_MWH;
-
   return {
     state,
     tariff,
-    monthlyUnits,
+    units,
+    requiredKw,
+    recommendedMin,
+    recommendedMax,
     kw,
-    roofLimited,
-    roofNeeded: kw * SQFT_PER_KW,
+    roofMin: Math.round(kw * SQFT_PER_KW.min),
+    roofMax: Math.round(recommendedMax * SQFT_PER_KW.max),
     cost,
     subsidy,
     netCost,
@@ -110,10 +101,7 @@ export function calculate({ bill, stateId, roofArea, type }: CalcInput) {
     monthlySavings: yearlySavings / 12,
     paybackYears,
     lifetimeSavings: lifetimeGross - netCost,
-    co2Yearly: (yearlyUnits / 1000) * CO2_T_PER_MWH,
-    co2Lifetime,
-    /** a mature tree absorbs roughly 20 kg CO2 a year */
-    treesEquivalent: Math.round((co2Lifetime * 1000) / (20 * YEARS)),
+    co2Lifetime: (lifetimeUnits / 1000) * CO2_T_PER_MWH,
   };
 }
 

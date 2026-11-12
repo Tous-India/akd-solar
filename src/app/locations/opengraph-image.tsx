@@ -5,5 +5,5 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function Image() {
-  return renderOg({ title: "Areas we serve in Haryana & Delhi NCR", eyebrow: "Locations" });
+  return renderOg({ title: "Areas we serve: Sonipat & Delhi NCR", eyebrow: "Locations" });
 }

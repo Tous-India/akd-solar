@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { gsap, MQ, ScrollTrigger, useGSAP, whenIdle } from "@/lib/gsap";
+import { useId, useRef } from "react";
+import { gsap, MQ, useGSAP, whenIdle } from "@/lib/gsap";
 
 type Pt = [number, number];
 
@@ -53,13 +53,26 @@ const RAYS = Array.from({ length: 12 }, (_, i) => {
 
 const SUN: Pt = [452, 168];
 
-export function HeroIllustration() {
+type Props = {
+  /** The slider passes false for hidden slides: no timeline is built (and any running one is killed). */
+  active?: boolean;
+};
+
+export function HeroIllustration({ active = true }: Props) {
   const ref = useRef<SVGSVGElement>(null);
+  // Unique ids so two copies on a page never share gradients or clip paths
+  const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const g = (name: string) => `hi-${uid}-${name}`;
 
   useGSAP(
     () => {
+      if (!active) return;
+      const svg = ref.current;
+      if (!svg) return;
       const mm = gsap.matchMedia();
-      mm.add(MQ.motion, (self) => {
+      mm.add({ motion: MQ.motion, desktop: MQ.desktop }, (ctx) => {
+        const { motion, desktop } = ctx.conditions as { motion: boolean; desktop: boolean };
+        if (!motion) return;
         const loops = gsap.timeline({ paused: true });
         loops
           .to("[data-rays]", { rotation: 360, svgOrigin: `${SUN[0]} ${SUN[1]}`, duration: 80, ease: "none", repeat: -1 }, 0)
@@ -70,37 +83,34 @@ export function HeroIllustration() {
           .to("[data-wire]", { strokeDashoffset: -60, duration: 1.6, ease: "none", repeat: -1 }, 0)
           .to("[data-led]", { opacity: 0.25, duration: 0.8, yoyo: true, repeat: -1, ease: "sine.inOut" }, 0);
 
-        // Sunrise entrance (desktop; phones show the finished artwork straight away)
-        if (window.matchMedia(MQ.desktop).matches) gsap.from("[data-sun]", { y: 70, autoAlpha: 0, duration: 1.6, delay: 0.5, ease: "power3.out" });
-        if (window.matchMedia(MQ.desktop).matches) gsap.from("[data-panel]", { autoAlpha: 0, scale: 0.85, transformOrigin: "50% 50%", stagger: 0.04, duration: 0.6, delay: 0.9 });
+        // Sunrise entrance on desktop; phones show the finished artwork straight away
+        if (desktop) {
+          gsap.from("[data-sun]", { y: 70, autoAlpha: 0, duration: 1.6, delay: 0.3, ease: "power3.out" });
+          gsap.from("[data-panel]", { autoAlpha: 0, scale: 0.85, transformOrigin: "50% 50%", stagger: 0.04, duration: 0.6, delay: 0.6 });
+        }
 
-        // Start the loops once the page is idle, and only run them while the hero is on screen
-        // (created through the context so it is still cleaned up on unmount)
-        return whenIdle(() =>
-          self.add(() => {
-            const st = ScrollTrigger.create({
-              trigger: ref.current,
-              start: "top bottom",
-              end: "bottom top",
-              onToggle: (t) => (t.isActive ? loops.play() : loops.pause()),
-            });
-            if (st.isActive) loops.play();
-          }),
-        );
-      });
-
-      // Desktop: as the hero scrolls away the sun rises, its glow brightens and the panels light up one by one
-      mm.add(MQ.desktop, () => {
-        const section = ref.current?.closest("section");
-        gsap
-          .timeline({ scrollTrigger: { trigger: section, start: "top top", end: "bottom 30%", scrub: 0.8 } })
-          .to("[data-sun-rise]", { y: -46, ease: "none" }, 0)
-          .to("[data-halo]", { scale: 1.3, opacity: 1, svgOrigin: `${SUN[0]} ${SUN[1]}`, ease: "none" }, 0)
-          .to("[data-panel-glow]", { opacity: 0.55, stagger: { each: 0.06, from: "end" }, ease: "none", duration: 0.25 }, 0.05);
+        // Loops start once the page is idle and pause while the artwork is off screen (no ScrollTrigger inside slides)
+        let visible = true;
+        let ready = false;
+        const io = new IntersectionObserver(([e]) => {
+          visible = e.isIntersecting;
+          if (!ready) return;
+          if (visible) loops.play();
+          else loops.pause();
+        });
+        io.observe(svg);
+        const cancelIdle = whenIdle(() => {
+          ready = true;
+          if (visible) loops.play();
+        });
+        return () => {
+          io.disconnect();
+          cancelIdle();
+        };
       });
       return () => mm.revert();
     },
-    { scope: ref },
+    { scope: ref, dependencies: [active], revertOnUpdate: true },
   );
 
   return (
@@ -109,58 +119,58 @@ export function HeroIllustration() {
       viewBox="0 0 600 500"
       className="h-auto w-full overflow-visible"
       role="img"
-      aria-labelledby="hero-illustration-title"
+      aria-labelledby={g("title")}
     >
-      <title id="hero-illustration-title">A house with solar panels on its roof as the sun rises behind it</title>
+      <title id={g("title")}>A house with solar panels on its roof as the sun rises behind it</title>
       <defs>
-        <radialGradient id="h-sun" cx="40%" cy="38%" r="70%">
+        <radialGradient id={g("sun")} cx="40%" cy="38%" r="70%">
           <stop offset="0" stopColor="#FFF3C4" />
           <stop offset="0.35" stopColor="#FFC93C" />
           <stop offset="1" stopColor="#F7931E" />
         </radialGradient>
-        <linearGradient id="h-ray" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={g("ray")} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#FFC93C" />
           <stop offset="1" stopColor="#F7931E" />
         </linearGradient>
-        <radialGradient id="h-halo">
+        <radialGradient id={g("halo")}>
           <stop offset="0" stopColor="#FFC93C" stopOpacity="0.55" />
           <stop offset="0.6" stopColor="#F7931E" stopOpacity="0.12" />
           <stop offset="1" stopColor="#F7931E" stopOpacity="0" />
         </radialGradient>
-        <linearGradient id="h-edge" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={g("edge")} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#2BA8E8" />
           <stop offset="1" stopColor="#1E4FB0" />
         </linearGradient>
-        <linearGradient id="h-p0" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={g("p0")} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#2A63D0" />
           <stop offset="1" stopColor="#1E4FB0" />
         </linearGradient>
-        <linearGradient id="h-p1" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={g("p1")} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#38B6F0" />
           <stop offset="1" stopColor="#2286D6" />
         </linearGradient>
-        <linearGradient id="h-p2" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={g("p2")} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#2F86E0" />
           <stop offset="1" stopColor="#1F5BC0" />
         </linearGradient>
-        <linearGradient id="h-sweep" x1="0" y1="0" x2="1" y2="0">
+        <linearGradient id={g("sweep")} x1="0" y1="0" x2="1" y2="0">
           <stop offset="0" stopColor="#fff" stopOpacity="0" />
           <stop offset="0.5" stopColor="#fff" stopOpacity="0.75" />
           <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </linearGradient>
-        <linearGradient id="h-ground" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={g("ground")} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#7CC520" />
           <stop offset="1" stopColor="#2E8B1E" />
         </linearGradient>
-        <linearGradient id="h-side" x1="0" y1="0" x2="1" y2="0">
+        <linearGradient id={g("side")} x1="0" y1="0" x2="1" y2="0">
           <stop offset="0" stopColor="#EFE6D6" />
           <stop offset="1" stopColor="#F7F1E6" />
         </linearGradient>
-        <linearGradient id="h-glass" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={g("glass")} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#CDEBFA" />
           <stop offset="1" stopColor="#7FC6EE" />
         </linearGradient>
-        <clipPath id="h-panels">
+        <clipPath id={g("panels")}>
           {PANELS.map((p, i) => (
             <polygon key={i} points={p.points} />
           ))}
@@ -168,17 +178,15 @@ export function HeroIllustration() {
       </defs>
 
       {/* Sun */}
-      <g data-sun-rise>
       <g data-sun>
-        <circle data-halo cx={SUN[0]} cy={SUN[1]} r="230" fill="url(#h-halo)" opacity="0.75" />
+        <circle data-halo cx={SUN[0]} cy={SUN[1]} r="230" fill={`url(#${g("halo")})`} opacity="0.75" />
         <g data-rays>
           {RAYS.map((pts, i) => (
-            <polygon key={i} points={pts} transform={`translate(${SUN[0]} ${SUN[1]})`} fill="url(#h-ray)" />
+            <polygon key={i} points={pts} transform={`translate(${SUN[0]} ${SUN[1]})`} fill={`url(#${g("ray")})`} />
           ))}
         </g>
-        <circle cx={SUN[0]} cy={SUN[1]} r="80" fill="url(#h-sun)" />
+        <circle cx={SUN[0]} cy={SUN[1]} r="80" fill={`url(#${g("sun")})`} />
         <circle cx={SUN[0] - 22} cy={SUN[1] - 24} r="22" fill="#fff" opacity="0.28" />
-      </g>
       </g>
 
       {/* Clouds */}
@@ -191,7 +199,7 @@ export function HeroIllustration() {
 
       {/* Ground */}
       <path d="M0 470c90-30 190-34 300-26s210 10 300-14v70H0z" fill="#A7D86A" opacity="0.55" />
-      <path d="M0 482c110-18 220-22 320-16s190 6 280-6v40H0z" fill="url(#h-ground)" />
+      <path d="M0 482c110-18 220-22 320-16s190 6 280-6v40H0z" fill={`url(#${g("ground")})`} />
       <ellipse cx="322" cy="452" rx="250" ry="10" fill="#0A1730" opacity="0.08" />
 
       {/* Small sparkle by the tree */}
@@ -209,10 +217,10 @@ export function HeroIllustration() {
       {/* House */}
       <g data-house>
         {/* side wall */}
-        <polygon points="312,294 548,302 548,448 312,448" fill="url(#h-side)" />
-        <rect x="372" y="338" width="56" height="46" rx="4" fill="url(#h-glass)" stroke="#1E4FB0" strokeWidth="4" />
+        <polygon points="312,294 548,302 548,448 312,448" fill={`url(#${g("side")})`} />
+        <rect x="372" y="338" width="56" height="46" rx="4" fill={`url(#${g("glass")})`} stroke="#1E4FB0" strokeWidth="4" />
         <path d="M400 338v46M372 361h56" stroke="#1E4FB0" strokeWidth="3" />
-        <rect x="456" y="338" width="56" height="46" rx="4" fill="url(#h-glass)" stroke="#1E4FB0" strokeWidth="4" />
+        <rect x="456" y="338" width="56" height="46" rx="4" fill={`url(#${g("glass")})`} stroke="#1E4FB0" strokeWidth="4" />
         <path d="M484 338v46M456 361h56" stroke="#1E4FB0" strokeWidth="3" />
 
         {/* inverter + wire */}
@@ -229,7 +237,7 @@ export function HeroIllustration() {
         <polygon points="206,166 444,186 560,304 326,298" fill="#123A86" />
         {PANELS.map((p, i) => (
           <g key={i} data-panel>
-            <polygon points={p.points} fill={`url(#h-p${p.tone})`} />
+            <polygon points={p.points} fill={`url(#${g(`p${p.tone}`)})`} />
             <polygon data-panel-glow points={p.points} fill="#FFE7A0" opacity="0" />
             <line
               x1={p.line[0][0]}
@@ -242,14 +250,14 @@ export function HeroIllustration() {
             />
           </g>
         ))}
-        <g clipPath="url(#h-panels)">
+        <g clipPath={`url(#${g("panels")})`}>
           <g data-sweep>
-            <rect x="180" y="140" width="70" height="190" fill="url(#h-sweep)" transform="skewX(-24)" />
+            <rect x="180" y="140" width="70" height="190" fill={`url(#${g("sweep")})`} transform="skewX(-24)" />
           </g>
         </g>
 
         {/* roof edge chevron, like the logo */}
-        <polyline points="84,304 206,170 330,304" fill="none" stroke="url(#h-edge)" strokeWidth="24" strokeLinejoin="miter" />
+        <polyline points="84,304 206,170 330,304" fill="none" stroke={`url(#${g("edge")})`} strokeWidth="24" strokeLinejoin="miter" />
 
         {/* gable window (four panes, from the logo) */}
         <g fill="none" stroke="#1E4FB0" strokeWidth="4">

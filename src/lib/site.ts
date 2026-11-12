@@ -4,61 +4,105 @@
  */
 export const site = {
   name: "AKD Solar",
-  legalName: "AKD Solar",
+  legalName: "AKD Solar Power Pvt. Ltd.",
+  cin: "U74999HR2017PTC069164",
+  gstin: "06AAPCA6118D1ZU",
   tagline: "Balancing The Nature",
   /** Live domain — used for canonical URLs, sitemap, robots and structured data */
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.akdsolar.in").replace(/\/$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.akdsolar.com").replace(/\/$/, ""),
   description:
-    "AKD Solar designs and installs rooftop solar for homes, businesses and farms across Haryana and Delhi NCR — with PM Surya Ghar subsidy support, MNRE-approved panels and net-metering handled end to end.",
-  // TODO: confirm the real founding year
-  foundedYear: 2016,
+    "AKD Solar Power Pvt. Ltd. installs rooftop solar for homes, businesses and housing societies in Sonipat, Haryana and Delhi NCR. Authorised Havells dealer since 2018.",
+  foundedYear: 2017,
+  havellsDealerSince: 2018,
 
-  /** Display format; links are generated from it */
-  // TODO: replace placeholder phone / WhatsApp / email with the real ones
-  phone: "+91 98765 43210",
+  /** Display format; tel: links are generated from it. The first number is also the WhatsApp number. */
+  phones: ["+91 82228 60046", "+91 82228 70046"],
+  phone: "+91 82228 60046",
   /** Country code + number, digits only (used by wa.me) */
-  whatsapp: "919876543210",
-  whatsappMessage: "Hello AKD Solar! I'd like to book a free solar site survey for my home.",
-  email: "hello@akdsolar.in",
+  whatsapp: "918222860046",
+  whatsappMessage: "Hello AKD Solar! I'd like a free solar site visit.",
+  email: "akdsolar@gmail.com",
 
-  /**
-   * The ONLY physical office shown on the site. City pages for other cities say
-   * "serving <city> from our Sonipat office" instead of inventing addresses.
-   * TODO: replace line1/line2/pincode/geo with the real office address.
-   */
+  offices: [
+    {
+      label: "Head office",
+      line1: "Shop No. 46, Main Market",
+      line2: "Sector 14",
+      city: "Sonipat",
+      state: "Haryana",
+      pincode: "131001",
+      mapsQuery: "Shop No. 46, Main Market, Sector 14, Sonipat, Haryana 131001",
+    },
+    {
+      label: "Branch office",
+      line1: "Shop No. 8, Garh Shahjahanpur Bypass",
+      line2: "Sector 10",
+      city: "Sonipat",
+      state: "Haryana",
+      pincode: "",
+      mapsQuery: "Garh Shahjahanpur Bypass, Sector 10, Sonipat, Haryana",
+    },
+  ],
+  /** Head office (used by schema, footer and city pages) */
   address: {
-    line1: "", // TODO: street / building
-
-    line2: "",
+    line1: "Shop No. 46, Main Market",
+    line2: "Sector 14",
     city: "Sonipat",
     citySlug: "sonipat",
     state: "Haryana",
     pincode: "131001",
     country: "IN",
   },
+  // City-level coordinates for Sonipat (no exact pin given)
   geo: { lat: 28.9931, lng: 77.0151 },
-  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sonipat+Haryana",
 
+  // TODO: confirm office hours (not provided with the business details)
   hours: [
     { days: "Monday – Saturday", time: "9:30 AM – 7:00 PM" },
     { days: "Sunday", time: "Site visits by appointment" },
   ],
 
-  // TODO: replace with the real social profile URLs (or remove the ones you don't use)
-  socials: [
-    { name: "Facebook", href: "https://www.facebook.com/akdsolar", icon: "facebook" },
-    { name: "Instagram", href: "https://www.instagram.com/akdsolar", icon: "instagram" },
-    { name: "LinkedIn", href: "https://www.linkedin.com/company/akdsolar", icon: "linkedin" },
-    { name: "YouTube", href: "https://www.youtube.com/@akdsolar", icon: "youtube" },
-  ],
+  numbers: {
+    years: "9+",
+    installations: "493+",
+    customers: "1,100+",
+    installDays: 3,
+  },
+
+  founder: {
+    name: "Dr. Ankush Dahiya",
+    role: "Founder & Director",
+    qualifications: [
+      "B.E. Electrical (2009)",
+      "MBA, Production & Operations",
+      "Chartered Engineer (India)",
+      "M.Tech, Power Systems",
+      "Honorary Doctorate in Technology (2026)",
+    ],
+    experience: "16+ years of industrial and teaching experience",
+  },
+
+  brands: {
+    panels: ["TATA", "Havells", "Waaree", "Vikram"],
+    inverters: ["Havells", "SolarEdge", "Delta", "Solax"],
+  },
+
+  loans: {
+    residential: { rate: "5.75%", banks: ["PNB", "SBI", "Canara Bank"] },
+    industrial: { rate: "8.50–9.25%" },
+  },
+
+  /** PM Surya Ghar subsidy deadline shown in the countdowns */
+  subsidyDeadline: "2027-03-31T23:59:59+05:30",
+  pmSuryaGharPortal: "https://pmsuryaghar.gov.in",
 } as const;
 
-export const telHref = `tel:${site.phone.replace(/[^\d+]/g, "")}`;
+export const telHref = (phone: string = site.phone) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 export const mailHref = `mailto:${site.email}`;
 export const officeLabel = `${site.address.city}, ${site.address.state}`;
-export const fullAddress = [site.address.line1, site.address.line2, `${site.address.city}, ${site.address.state} ${site.address.pincode}`]
-  .filter(Boolean)
-  .join(", ");
+export const formatOffice = (o: (typeof site.offices)[number]) => [o.line1, o.line2, `${o.city}, ${o.state}${o.pincode ? ` ${o.pincode}` : ""}`].join(", ");
+export const fullAddress = formatOffice(site.offices[0]);
+export const mapsUrl = (query: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 
 export function whatsappHref(message: string = site.whatsappMessage) {
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
@@ -68,15 +112,15 @@ export function absoluteUrl(path = "/") {
   return `${site.url}${path === "/" ? "" : path}`;
 }
 
-export type NavItem = { label: string; href: string; menu?: "services" | "locations"; mobileOnly?: boolean };
+export type NavItem = { label: string; href: string; menu?: "solutions" | "locations" };
 
 export const nav: NavItem[] = [
-  { label: "Home", href: "/", mobileOnly: true },
+  { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Services", href: "/services", menu: "services" },
-  { label: "Locations", href: "/locations", menu: "locations" },
+  { label: "Solar Solutions", href: "/solar-solutions", menu: "solutions" },
+  { label: "PM Surya Ghar Yojana", href: "/pm-surya-ghar-yojana" },
   { label: "Projects", href: "/projects" },
+  { label: "Locations", href: "/locations", menu: "locations" },
   { label: "Calculator", href: "/calculator" },
-  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];

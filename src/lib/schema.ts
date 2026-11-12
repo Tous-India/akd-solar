@@ -1,25 +1,35 @@
 /**
  * JSON-LD builders. All facts come from site.ts / locations.ts / data.ts / blog.ts so
- * structured data always matches what the page says. No ratings are emitted (no real review data yet).
+ * structured data always matches what the page says. No ratings are emitted (no review data).
  */
 import { site, absoluteUrl, fullAddress } from "./site";
 import { locations, type Location } from "./locations";
-import { services, type FAQ, type Service } from "./data";
+import { solutions, type FAQ, type Solution } from "./data";
 import type { Post } from "./blog";
 
 export const ORG_ID = `${site.url}/#organization`;
 export const BUSINESS_ID = `${site.url}/#business`;
 export const WEBSITE_ID = `${site.url}/#website`;
+export const FOUNDER_ID = `${site.url}/#founder`;
 
 type Crumb = { name: string; path: string };
 
 const cityNode = (l: Location) => ({
-  "@type": "City",
+  "@type": l.slug === "delhi-ncr" ? "AdministrativeArea" : "City",
   name: l.name,
   containedInPlace: { "@type": "State", name: l.state },
 });
 
-/** Site-wide graph: Organization + local business + WebSite */
+const postalAddress = (o: (typeof site.offices)[number]) => ({
+  "@type": "PostalAddress",
+  streetAddress: `${o.line1}, ${o.line2}`,
+  addressLocality: o.city,
+  addressRegion: o.state,
+  ...(o.pincode ? { postalCode: o.pincode } : {}),
+  addressCountry: "IN",
+});
+
+/** Site-wide graph: Organization + local business (head office, branch) + founder + WebSite */
 export function siteGraph() {
   return {
     "@context": "https://schema.org",
@@ -28,50 +38,56 @@ export function siteGraph() {
         "@type": "Organization",
         "@id": ORG_ID,
         name: site.name,
+        legalName: site.legalName,
         slogan: site.tagline,
         url: site.url,
         logo: absoluteUrl("/logo.png"),
         email: site.email,
         telephone: site.phone,
         foundingDate: String(site.foundedYear),
-        sameAs: site.socials.map((s) => s.href),
+        foundingLocation: { "@type": "Place", name: "Sonipat, Haryana" },
+        founder: { "@id": FOUNDER_ID },
+        taxID: site.gstin,
+        identifier: [
+          { "@type": "PropertyValue", propertyID: "CIN", value: site.cin },
+          { "@type": "PropertyValue", propertyID: "GSTIN", value: site.gstin },
+        ],
+      },
+      {
+        "@type": "Person",
+        "@id": FOUNDER_ID,
+        name: site.founder.name,
+        jobTitle: site.founder.role,
+        worksFor: { "@id": ORG_ID },
       },
       {
         "@type": "ElectricalContractor",
         additionalType: "https://en.wikipedia.org/wiki/Solar_power",
         "@id": BUSINESS_ID,
         name: site.name,
+        legalName: site.legalName,
         description: site.description,
         url: site.url,
         image: absoluteUrl("/logo.png"),
-        telephone: site.phone,
+        telephone: site.phones,
         email: site.email,
         parentOrganization: { "@id": ORG_ID },
-        address: {
-          "@type": "PostalAddress",
-          ...(site.address.line1 ? { streetAddress: [site.address.line1, site.address.line2].filter(Boolean).join(", ") } : {}),
-          addressLocality: site.address.city,
-          addressRegion: site.address.state,
-          postalCode: site.address.pincode,
-          addressCountry: site.address.country,
-        },
+        address: postalAddress(site.offices[0]),
         geo: { "@type": "GeoCoordinates", latitude: site.geo.lat, longitude: site.geo.lng },
+        department: site.offices.slice(1).map((o) => ({
+          "@type": "ElectricalContractor",
+          name: `${site.name} — ${o.label}`,
+          address: postalAddress(o),
+          telephone: site.phones,
+        })),
         areaServed: locations.map(cityNode),
-        openingHoursSpecification: [
-          {
-            "@type": "OpeningHoursSpecification",
-            dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-            opens: "09:30",
-            closes: "19:00",
-          },
-        ],
-        knowsAbout: ["Rooftop solar", "PM Surya Ghar Muft Bijli Yojana", "Net metering", "Solar water pumps", "Hybrid solar systems"],
+        knowsAbout: ["Rooftop solar", "PM Surya Ghar Muft Bijli Yojana", "Net metering", "Solar water pumps", "Havells solar"],
         hasOfferCatalog: {
           "@type": "OfferCatalog",
-          name: "Solar services",
-          itemListElement: services.map((s) => ({
+          name: "Solar solutions",
+          itemListElement: solutions.map((s) => ({
             "@type": "Offer",
-            itemOffered: { "@type": "Service", name: s.title, url: absoluteUrl(`/services/${s.slug}`) },
+            itemOffered: { "@type": "Service", name: s.title, url: absoluteUrl(`/solar-solutions/${s.slug}`) },
           })),
         },
       },
@@ -104,20 +120,20 @@ export function faqSchema(faqs: FAQ[]) {
   };
 }
 
-export function serviceSchema(service: Service) {
+export function solutionSchema(s: Solution) {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: service.title,
-    serviceType: service.title,
-    description: service.description,
-    url: absoluteUrl(`/services/${service.slug}`),
+    name: s.title,
+    serviceType: s.heading,
+    description: s.intro,
+    url: absoluteUrl(`/solar-solutions/${s.slug}`),
     provider: { "@id": BUSINESS_ID },
     areaServed: locations.map(cityNode),
   };
 }
 
-/** City page: solar installation service offered in one city (no invented local address) */
+/** City page: solar installation service offered in one city (served from the Sonipat offices) */
 export function cityServiceSchema(loc: Location) {
   return {
     "@context": "https://schema.org",
@@ -130,11 +146,6 @@ export function cityServiceSchema(loc: Location) {
     areaServed: {
       ...cityNode(loc),
       geo: { "@type": "GeoCoordinates", latitude: loc.lat, longitude: loc.lng },
-    },
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: `Solar services in ${loc.name}`,
-      itemListElement: services.map((s) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: s.title } })),
     },
   };
 }

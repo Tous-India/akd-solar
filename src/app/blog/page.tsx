@@ -33,13 +33,8 @@ export default function BlogIndex() {
       <JsonLd data={blogSchema} />
       <PageHero
         crumbs={[{ name: "Blog", path: "/blog" }]}
-        eyebrow="Solar guides"
-        title={
-          <>
-            Straight answers about <span className="text-sun-deep">solar</span>.
-          </>
-        }
-        subtitle="Subsidy rules, real costs and how net-metering works — written by our engineers for homes and businesses in Haryana and Delhi NCR."
+        title="Solar guides"
+        subtitle="Subsidy, costs and net metering, explained simply."
       />
 
       <section aria-label="Articles" className="pb-20 sm:pb-28">

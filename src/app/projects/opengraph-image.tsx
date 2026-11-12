@@ -5,5 +5,5 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function Image() {
-  return renderOg({ title: "Solar projects across Haryana & Delhi NCR", eyebrow: "Our work" });
+  return renderOg({ title: "Our projects", eyebrow: "Real installations" });
 }

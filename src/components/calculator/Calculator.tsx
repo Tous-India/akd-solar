@@ -4,53 +4,55 @@ import { useEffect, useId, useMemo, useState, type CSSProperties, type ReactNode
 import { Button } from "@/components/ui/Button";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { AnimatedNumber } from "@/components/motion/AnimatedNumber";
-import { calculate, DEFAULT_STATE, LIMITS, STATES, type ConsumerType } from "@/lib/calc";
+import { calculate, DEFAULT_STATE, LIMITS, STATES, unitsFromBill, type ConsumerType } from "@/lib/calc";
 import { formatINR, formatLakh, formatNumber } from "@/lib/format";
 import { whatsappHref } from "@/lib/site";
 
 const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
+const kwText = (n: number) => formatNumber(n, n % 1 ? 1 : 0);
 
-type CalculatorProps = { initialStateId?: string; initialBill?: number; cityName?: string };
-
-export function Calculator({ initialStateId = DEFAULT_STATE, initialBill = 3000, cityName }: CalculatorProps = {}) {
+export function Calculator({ initialStateId = DEFAULT_STATE, initialUnits = 300 }: { initialStateId?: string; initialUnits?: number } = {}) {
   const id = useId();
   const [type, setType] = useState<ConsumerType>("residential");
-  const [bill, setBill] = useState(initialBill);
   const [stateId, setStateId] = useState(initialStateId);
-  const [roofArea, setRoofArea] = useState(600);
+  const [billMode, setBillMode] = useState(false);
+  const [units, setUnits] = useState(initialUnits);
+  const [bill, setBill] = useState(2500);
 
   const limits = LIMITS[type];
 
-  // Pre-fill the bill from ?bill= (used by the home page mini calculator)
+  // ?units= or ?bill= in the URL pre-fills the calculator
   useEffect(() => {
-    const fromUrl = Number(new URLSearchParams(window.location.search).get("bill"));
-    if (fromUrl > 0) setBill(clamp(fromUrl, LIMITS.residential.billMin, LIMITS.residential.billMax));
+    const q = new URLSearchParams(window.location.search);
+    const u = Number(q.get("units"));
+    const b = Number(q.get("bill"));
+    if (u > 0) setUnits(clamp(u, LIMITS.residential.unitsMin, LIMITS.residential.unitsMax));
+    else if (b > 0) {
+      setBillMode(true);
+      setBill(clamp(b, LIMITS.residential.billMin, LIMITS.residential.billMax));
+    }
   }, []);
 
   const switchType = (next: ConsumerType) => {
     setType(next);
     const l = LIMITS[next];
-    setBill((b) => clamp(next === "commercial" ? Math.max(b, 25000) : Math.min(b, 3000), l.billMin, l.billMax));
-    setRoofArea((r) => clamp(next === "commercial" ? Math.max(r, 5000) : Math.min(r, 600), l.roofMin, l.roofMax));
+    setUnits((u) => clamp(next === "commercial" ? Math.max(u, 2000) : Math.min(u, 600), l.unitsMin, l.unitsMax));
+    setBill((b) => clamp(next === "commercial" ? Math.max(b, 20000) : Math.min(b, 5000), l.billMin, l.billMax));
   };
 
-  const r = useMemo(() => calculate({ bill, stateId, roofArea, type }), [bill, stateId, roofArea, type]);
-
-  const shareText = `Hello AKD Solar! I used your calculator: ${cityName ? `${cityName}, ` : ""}${r.state.name}, ${type}, monthly bill ${formatINR(bill)}, roof ${formatNumber(roofArea)} sq ft. Suggested system: ${formatNumber(r.kw, 1)} kW. Please book a free site survey.`;
+  const effectiveUnits = billMode ? unitsFromBill(bill, stateId, type) : units;
+  const r = useMemo(() => calculate({ units: effectiveUnits, stateId, type }), [effectiveUnits, stateId, type]);
+  const range = r.recommendedMin === r.recommendedMax ? `${kwText(r.recommendedMin)} kW` : `${kwText(r.recommendedMin)}–${kwText(r.recommendedMax)} kW`;
+  const shareText = `Hello AKD Solar! I use about ${formatNumber(effectiveUnits)} units a month (${r.state.name}, ${type}). The calculator suggests ${range}. Please book a free site visit.`;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-8">
-      {/* Inputs */}
-      <form
-        className="rounded-card border border-line bg-white p-6 sm:p-8 lg:p-10"
-        onSubmit={(e) => e.preventDefault()}
-        aria-labelledby={`${id}-inputs`}
-      >
+      <form className="rounded-card border border-line bg-white p-6 sm:p-8" onSubmit={(e) => e.preventDefault()} aria-labelledby={`${id}-inputs`}>
         <h2 id={`${id}-inputs`} className="font-display text-h3 font-bold">
-          Tell us about your property
+          Your usage
         </h2>
 
-        <fieldset className="mt-8">
+        <fieldset className="mt-6">
           <legend className="font-semibold text-ink">Property type</legend>
           <div className="mt-3 grid grid-cols-2 gap-2 rounded-full bg-sand p-1.5">
             {(["residential", "commercial"] as const).map((t) => (
@@ -68,22 +70,43 @@ export function Calculator({ initialStateId = DEFAULT_STATE, initialBill = 3000,
           </div>
         </fieldset>
 
-        <RangeField
-          id={`${id}-bill`}
-          label="Average monthly bill"
-          value={bill}
-          min={limits.billMin}
-          max={limits.billMax}
-          step={limits.billStep}
-          onChange={setBill}
-          display={formatINR(bill)}
-          valueText={`${formatINR(bill)} per month`}
-          minLabel={formatINR(limits.billMin)}
-          maxLabel={formatLakh(limits.billMax)}
-          prefix="₹"
-        />
+        {billMode ? (
+          <RangeField
+            id={`${id}-bill`}
+            label="Monthly bill"
+            value={bill}
+            min={limits.billMin}
+            max={limits.billMax}
+            step={limits.billStep}
+            onChange={setBill}
+            valueText={`${formatINR(bill)} per month`}
+            minLabel={formatINR(limits.billMin)}
+            maxLabel={formatLakh(limits.billMax)}
+            prefix="₹"
+            hint={`≈ ${formatNumber(effectiveUnits)} units a month`}
+          />
+        ) : (
+          <RangeField
+            id={`${id}-units`}
+            label="Monthly units (kWh)"
+            value={units}
+            min={limits.unitsMin}
+            max={limits.unitsMax}
+            step={limits.unitsStep}
+            onChange={setUnits}
+            valueText={`${formatNumber(units)} units per month`}
+            minLabel={formatNumber(limits.unitsMin)}
+            maxLabel={formatNumber(limits.unitsMax)}
+            suffix="units"
+            hint="Shown as “Units consumed” on your electricity bill."
+          />
+        )}
 
-        <div className="mt-8">
+        <label className="mt-4 flex min-h-11 cursor-pointer items-center gap-3 text-[0.95rem] text-ink">
+          <input type="checkbox" checked={billMode} onChange={(e) => setBillMode(e.target.checked)} className="size-5 accent-sun" />I only know my bill (₹)
+        </label>
+
+        <div className="mt-6">
           <label htmlFor={`${id}-state`} className="font-semibold text-ink">
             State
           </label>
@@ -102,102 +125,68 @@ export function Calculator({ initialStateId = DEFAULT_STATE, initialBill = 3000,
             </select>
             <Icon name="chevronDown" className="pointer-events-none absolute top-1/2 right-4 size-5 -translate-y-1/2 text-muted" />
           </div>
-          <p className="mt-2 text-sm text-muted">
-            Avg. tariff ~₹{formatNumber(r.tariff, 1)}/unit · ~{formatNumber(r.state.yield, 1)} units per kW per day
-          </p>
         </div>
-
-        <RangeField
-          id={`${id}-roof`}
-          label="Shadow-free roof area"
-          value={roofArea}
-          min={limits.roofMin}
-          max={limits.roofMax}
-          step={limits.roofStep}
-          onChange={setRoofArea}
-          display={`${formatNumber(roofArea)} sq ft`}
-          valueText={`${formatNumber(roofArea)} square feet`}
-          minLabel={`${formatNumber(limits.roofMin)} sq ft`}
-          maxLabel={`${formatNumber(limits.roofMax)} sq ft`}
-          suffix="sq ft"
-        />
       </form>
 
-      {/* Results */}
       <section
         aria-labelledby={`${id}-results`}
         aria-live="polite"
-        className="on-dark relative overflow-hidden rounded-card bg-navy p-6 text-cream sm:p-8 lg:sticky lg:top-28 lg:self-start lg:p-10"
+        className="on-dark relative overflow-hidden rounded-card bg-navy p-6 text-cream sm:p-8 lg:sticky lg:top-32 lg:self-start"
       >
         <div aria-hidden className="pointer-events-none absolute inset-0">
           <div className="panel-grid-dark absolute inset-0" />
-          <div className="sun-glow absolute -top-48 -right-48 size-[520px] rounded-full opacity-60" />
+          <div className="sun-glow absolute -top-48 -right-48 size-[520px] rounded-full opacity-50" />
         </div>
         <div className="relative">
           <h2 id={`${id}-results`} className="text-sm font-bold tracking-[0.16em] text-gold uppercase">
-            Your solar estimate
+            Recommended system
           </h2>
-          <div className="mt-5 flex flex-wrap items-end gap-x-4 gap-y-1">
-            <p className="font-display text-[clamp(3rem,2.2rem+3.4vw,4.75rem)] leading-none font-extrabold tracking-[-0.045em]">
-              <AnimatedNumber value={r.kw} format={(n) => formatNumber(n, 1)} />
-              <span className="ml-2 text-[0.45em] text-gold">kW</span>
-            </p>
-            <p className="pb-2 text-cream/70">recommended system</p>
-          </div>
-          {r.roofLimited ? (
-            <p className="mt-4 flex gap-2 rounded-card bg-white/5 p-3 text-sm text-gold">
-              <Icon name="sparkle" className="mt-0.5 size-4 shrink-0" />
-              Your roof limits the system size. Ideal size for your bill needs ~{formatNumber(Math.ceil((r.monthlyUnits / (r.state.yield * 30)) * 100))} sq ft.
-            </p>
-          ) : null}
+          <p className="mt-4 font-display text-[clamp(2.5rem,2rem+2.4vw,3.75rem)] leading-none font-extrabold tracking-[-0.04em]" data-kw>
+            <AnimatedNumber value={r.recommendedMin} format={kwText} />
+            {r.recommendedMax !== r.recommendedMin ? (
+              <>
+                –<AnimatedNumber value={r.recommendedMax} format={kwText} />
+              </>
+            ) : null}
+            <span className="ml-2 text-[0.45em] text-gold">kW</span>
+          </p>
+          <p className="mt-2 text-sm text-cream/70">
+            {formatNumber(effectiveUnits)} units ÷ 120 = {formatNumber(r.requiredKw, 1)} kW, plus 10–20% for future load
+          </p>
 
-          <dl className="mt-8 grid grid-cols-1 gap-3 min-[400px]:grid-cols-2">
-            <Stat icon="rupee" label="Approx. system cost">
+          <dl className="mt-6 grid grid-cols-1 gap-3 min-[400px]:grid-cols-2">
+            <Stat icon="home" label="Roof area needed">
+              {formatNumber(r.roofMin)}–{formatNumber(r.roofMax)} sq ft
+            </Stat>
+            <Stat icon="rupee" label="Approx. cost">
               <AnimatedNumber value={r.cost} format={formatINR} />
             </Stat>
-            <Stat icon="badge" label="PM Surya Ghar subsidy" accent="leaf" note={type === "commercial" ? "Not applicable for commercial" : undefined}>
+            <Stat icon="badge" label="PM Surya Ghar subsidy" accent="leaf" note={type === "commercial" ? "Homes only" : undefined}>
               <AnimatedNumber value={r.subsidy} format={formatINR} />
             </Stat>
             <Stat icon="sun" label="Yearly savings" accent="gold">
               <AnimatedNumber value={r.yearlySavings} format={formatINR} />
             </Stat>
-            <Stat icon="clock" label="Payback period">
+            <Stat icon="clock" label="Payback">
               <AnimatedNumber value={r.paybackYears} format={(n) => `${formatNumber(n, 1)} years`} />
             </Stat>
-            <Stat icon="sparkle" label="25-year net savings" accent="gold">
+            <Stat icon="leaf" label="25-year savings" accent="gold">
               <AnimatedNumber value={r.lifetimeSavings} format={formatLakh} />
-            </Stat>
-            <Stat icon="leaf" label="CO₂ offset (25 yrs)" accent="leaf" note={`≈ ${formatNumber(r.treesEquivalent)} trees planted`}>
-              <AnimatedNumber value={r.co2Lifetime} format={(n) => `${formatNumber(n, 0)} t`} />
             </Stat>
           </dl>
 
-          <div className="mt-6 rounded-card border border-white/10 p-4 text-sm text-cream/75">
-            <p className="flex justify-between gap-4">
-              <span>Net cost after subsidy</span>
-              <span className="font-display font-bold text-cream">
-                <AnimatedNumber value={r.netCost} format={formatINR} />
-              </span>
-            </p>
-            <p className="mt-2 flex justify-between gap-4">
-              <span>Generation per year</span>
-              <span className="font-semibold text-cream">{formatNumber(r.yearlyUnits)} units</span>
-            </p>
-          </div>
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Button href="/contact" className="flex-1" magnetic>
-              Book free site survey
+              Book a free site visit
             </Button>
             <Button href={whatsappHref(shareText)} variant="outline-light" icon={null} iconLeft="whatsapp" className="flex-1">
               Send to WhatsApp
             </Button>
           </div>
 
-          <p className="mt-6 text-xs leading-relaxed text-cream/55">
-            Figures are indicative and based on average state tariffs, typical solar yield and current PM Surya Ghar rules (₹30,000/kW for the
-            first 2 kW and ₹18,000 for the 3rd kW, capped at ₹78,000; residential only). Subsidy and tariffs are subject to current government and
-            DISCOM rules. Your exact quote follows a free site survey.
+          <p className="mt-5 text-xs leading-relaxed text-cream/60">
+            Indicative only. Sizing follows the DHBVN/UHBVN guide (1 kW ≈ 120 units a month; 80–100 sq ft per kW). Subsidy: ₹30,000/kW for the first 2 kW and
+            ₹18,000 for the 3rd kW, capped at ₹78,000, homes only — subject to current rules. Your quote follows a free site visit.
           </p>
         </div>
       </section>
@@ -213,15 +202,15 @@ type RangeProps = {
   max: number;
   step: number;
   onChange: (n: number) => void;
-  display: string;
   valueText: string;
   minLabel: string;
   maxLabel: string;
   prefix?: string;
   suffix?: string;
+  hint?: string;
 };
 
-function RangeField({ id, label, value, min, max, step, onChange, display, valueText, minLabel, maxLabel, prefix, suffix }: RangeProps) {
+function RangeField({ id, label, value, min, max, step, onChange, valueText, minLabel, maxLabel, prefix, suffix, hint }: RangeProps) {
   const [draft, setDraft] = useState<string | null>(null);
   const fill = ((value - min) / (max - min)) * 100;
 
@@ -233,14 +222,11 @@ function RangeField({ id, label, value, min, max, step, onChange, display, value
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-6">
       <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
         <label htmlFor={id} className="font-semibold text-ink">
           {label}
         </label>
-        <span className="sr-only" aria-live="polite">
-          {display}
-        </span>
         <div className="flex min-h-11 items-center gap-1 rounded-xl border border-line bg-cream px-3 focus-within:border-panel">
           {prefix ? <span className="text-muted">{prefix}</span> : null}
           <input
@@ -272,21 +258,20 @@ function RangeField({ id, label, value, min, max, step, onChange, display, value
         <span>{minLabel}</span>
         <span>{maxLabel}</span>
       </div>
+      {hint ? <p className="mt-2 text-sm text-muted">{hint}</p> : null}
     </div>
   );
 }
 
 function Stat({ icon, label, children, accent, note }: { icon: IconName; label: string; children: ReactNode; accent?: "gold" | "leaf"; note?: string }) {
   return (
-    <div className="rounded-card border border-white/10 bg-white/[0.04] p-4 sm:p-5">
+    <div className="rounded-card border border-white/10 bg-white/[0.04] p-4">
       <dt className="flex items-center gap-2 text-sm text-cream/70">
         <Icon name={icon} className="size-4 shrink-0 text-gold" />
         {label}
       </dt>
-      <dd className={`mt-2 font-display text-xl font-bold tracking-tight sm:text-2xl ${accent === "gold" ? "text-gold" : accent === "leaf" ? "text-leaf" : "text-cream"}`}>
-        {children}
-      </dd>
-      {note ? <dd className="mt-1 text-xs text-cream/55">{note}</dd> : null}
+      <dd className={`mt-1.5 font-display text-xl font-bold tracking-tight ${accent === "gold" ? "text-gold" : accent === "leaf" ? "text-leaf" : "text-cream"}`}>{children}</dd>
+      {note ? <dd className="mt-1 text-xs text-cream/60">{note}</dd> : null}
     </div>
   );
 }
