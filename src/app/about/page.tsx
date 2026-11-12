@@ -21,10 +21,7 @@ export const metadata: Metadata = pageMeta({
 const dim = (src: string) => imageDims[src] ?? { width: 1200, height: 900 };
 const withDims = (src: string, caption: string) => ({ src, caption, ...dim(src) });
 
-const offices = [
-  withDims("/images/about/office-sonipat-sector14.jpg", "Head office — Shop No. 46, Main Market, Sector 14, Sonipat"),
-  withDims("/images/about/office-havells-counter.jpg", "Our Havells solar counter"),
-];
+const office = withDims("/images/about/office-sonipat-sector14.jpg", "Head office — Shop No. 46, Main Market, Sector 14, Sonipat");
 
 export default function AboutPage() {
   const doctorate = withDims("/images/about/honorary-doctorate.jpg", `Honorary Doctorate in Technology awarded to ${site.founder.name} (2026)`);
@@ -86,19 +83,20 @@ export default function AboutPage() {
 
         <section aria-labelledby="office-title" className="mt-14">
           <h2 id="office-title" className="text-h2 font-bold text-ink">
-            Our offices
+            Our office
           </h2>
-          <Reveal as="ul" stagger={0.08} className="mt-6 grid gap-4 md:grid-cols-[1.6fr_1fr]">
-            {offices.map((o) => (
-              <li key={o.src}>
-                <figure className="h-full overflow-hidden rounded-card border border-line bg-white">
-                  <div className="relative aspect-[16/9] overflow-hidden">
-                    <Image src={o.src} alt={o.caption} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
-                  </div>
-                  <figcaption className="px-4 py-3 text-sm text-muted">{o.caption}</figcaption>
-                </figure>
-              </li>
-            ))}
+          <Reveal className="mt-6 max-w-4xl">
+            <figure className="overflow-hidden rounded-card border border-line bg-white">
+              <Image
+                src={office.src}
+                alt={office.caption}
+                width={office.width}
+                height={office.height}
+                sizes="(min-width: 960px) 896px, 100vw"
+                className="h-auto w-full"
+              />
+              <figcaption className="px-4 py-3 text-sm text-muted">{office.caption}</figcaption>
+            </figure>
           </Reveal>
         </section>
 

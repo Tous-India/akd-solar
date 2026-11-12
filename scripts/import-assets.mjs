@@ -42,7 +42,6 @@ for (let n = 1; n <= 6; n++) {
   dims[`/images/about/certificate-${n}.jpg`] = await save(path.join(IN, "about", `certificate-${n}.jpg`), path.join(OUT, "about", `certificate-${n}.jpg`));
 }
 dims["/images/about/honorary-doctorate.jpg"] = await save(path.join(IN, "about", "honorary-doctorate.jpg"), path.join(OUT, "about", "honorary-doctorate.jpg"));
-dims["/images/about/office-havells-counter.jpg"] = await save(path.join(IN, "about", "office-havells-counter.jpg"), path.join(OUT, "about", "office-havells-counter.jpg"));
 // Signboard only: the lower part of this photo shows a poster with a politician
 dims["/images/about/office-sonipat-sector14.jpg"] = await save(path.join(IN, "about", "office-sonipat-sector14.jpg"), path.join(OUT, "about", "office-sonipat-sector14.jpg"), {
   region: { left: 0, top: 0, width: 952, height: 330 },

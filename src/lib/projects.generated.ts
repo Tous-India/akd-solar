@@ -379,10 +379,6 @@ export const imageDims: Record<string, { width: number; height: number }> = {
     "width": 1107,
     "height": 1600
   },
-  "/images/about/office-havells-counter.jpg": {
-    "width": 378,
-    "height": 582
-  },
   "/images/about/office-sonipat-sector14.jpg": {
     "width": 952,
     "height": 330
