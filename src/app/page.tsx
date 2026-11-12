@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { BannerSlider } from "@/components/home/BannerSlider";
-import { NumbersStrip } from "@/components/home/NumbersStrip";
+import { AboutIntro } from "@/components/home/AboutIntro";
 import { PmTeaser } from "@/components/home/PmTeaser";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { RecentProjects } from "@/components/home/RecentProjects";
@@ -27,7 +27,7 @@ export default function HomePage() {
       <div className="pt-[68px] xl:pt-[76px]">
         <BannerSlider />
       </div>
-      <NumbersStrip />
+      <AboutIntro />
 
       <section aria-labelledby="solutions-title" className="pb-4">
         <Container>

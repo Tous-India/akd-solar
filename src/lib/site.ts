@@ -66,6 +66,7 @@ export const site = {
     years: "9+",
     installations: "493+",
     customers: "1,100+",
+    subsidyCustomers: "207",
     installDays: 3,
   },
 
@@ -112,13 +113,13 @@ export function absoluteUrl(path = "/") {
   return `${site.url}${path === "/" ? "" : path}`;
 }
 
-export type NavItem = { label: string; href: string; menu?: "solutions" | "locations" };
+export type NavItem = { label: string; href: string; menu?: "solutions" | "locations"; highlight?: boolean };
 
 export const nav: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Solar Solutions", href: "/solar-solutions", menu: "solutions" },
-  { label: "PM Surya Ghar Yojana", href: "/pm-surya-ghar-yojana" },
+  { label: "PM Surya Ghar Yojana", href: "/pm-surya-ghar-yojana", highlight: true },
   { label: "Projects", href: "/projects" },
   { label: "Locations", href: "/locations", menu: "locations" },
   { label: "Calculator", href: "/calculator" },

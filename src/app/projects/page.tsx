@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
-import { PageHero } from "@/components/ui/PageHero";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/motion/Reveal";
 import { ProjectsGallery } from "@/components/projects/ProjectsGallery";
 import { InlineCta } from "@/components/solutions/Blocks";
@@ -21,7 +21,7 @@ export default function ProjectsPage() {
   const collage = imageDims[COLLAGE];
   return (
     <>
-      <PageHero crumbs={[{ name: "Projects", path: "/projects" }]} title="Our Projects" />
+      <PageHeader breadcrumb={[{ name: "Projects", path: "/projects" }]} eyebrow="Our work" title="Our Projects" intro="Rooftop systems we have installed across Sonipat, Rohtak and nearby." />
 
       <Container>
         <ProjectsGallery />

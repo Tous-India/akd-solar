@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
-import { PageHero } from "@/components/ui/PageHero";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { SolutionCards } from "@/components/solutions/SolutionCards";
 import { InlineCta } from "@/components/solutions/Blocks";
 import { pageMeta } from "@/lib/seo";
@@ -14,7 +14,7 @@ export const metadata: Metadata = pageMeta({
 export default function SolarSolutionsPage() {
   return (
     <>
-      <PageHero crumbs={[{ name: "Solar Solutions", path: "/solar-solutions" }]} title="Solar solutions" subtitle="Pick the setup that fits your roof and bill." />
+      <PageHeader breadcrumb={[{ name: "Solar Solutions", path: "/solar-solutions" }]} eyebrow="What we install" title="Solar solutions" intro="Pick the setup that fits your roof and bill." />
       <section aria-label="Solutions" className="pb-4">
         <Container>
           <SolutionCards headingLevel="h2" />

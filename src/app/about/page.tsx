@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
-import { PageHero } from "@/components/ui/PageHero";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/motion/Reveal";
 import { NumbersStrip } from "@/components/home/NumbersStrip";
 import { ImageGallery } from "@/components/about/ImageGallery";
+import { StandsFor, StandsForList } from "@/components/about/StandsFor";
 import { InlineCta } from "@/components/solutions/Blocks";
 import { certificates, vision } from "@/lib/data";
 import { imageDims } from "@/lib/projects.generated";
@@ -27,10 +28,11 @@ export default function AboutPage() {
   const doctorate = withDims("/images/about/honorary-doctorate.jpg", `Honorary Doctorate in Technology awarded to ${site.founder.name} (2026)`);
   return (
     <>
-      <PageHero
-        crumbs={[{ name: "About", path: "/about" }]}
+      <PageHeader
+        breadcrumb={[{ name: "About", path: "/about" }]}
+        eyebrow="About us"
         title="About AKD Solar"
-        subtitle={`Rooftop solar from Sonipat since ${site.foundedYear}. Authorised Havells dealer since ${site.havellsDealerSince}.`}
+        intro={`Solar EPC and O&M from Sonipat since ${site.foundedYear}. Authorised Havells dealer since ${site.havellsDealerSince}.`}
       />
 
       <Container>
@@ -69,6 +71,16 @@ export default function AboutPage() {
       <NumbersStrip />
 
       <Container>
+        <section aria-labelledby="stands-title" className="mb-14">
+          <h2 id="stands-title" className="text-h2 font-bold text-ink">
+            What AKD Solar stands for
+          </h2>
+          <StandsFor size="lg" label={false} className="mt-6 max-w-3xl" />
+          <div className="mt-8">
+            <StandsForList />
+          </div>
+        </section>
+
         <section aria-labelledby="certs-title">
           <h2 id="certs-title" className="text-h2 font-bold text-ink">
             Certificates

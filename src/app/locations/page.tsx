@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
-import { PageHero } from "@/components/ui/PageHero";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/motion/Reveal";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { menuLinks } from "@/components/layout/menuLinks";
@@ -28,7 +28,7 @@ export default function LocationsPage() {
   return (
     <>
       <JsonLd data={itemList} />
-      <PageHero crumbs={[{ name: "Areas We Serve", path: "/locations" }]} title="Areas we serve" subtitle={`Seven areas, all served from our offices in ${site.address.city}.`} />
+      <PageHeader breadcrumb={[{ name: "Areas We Serve", path: "/locations" }]} eyebrow="Locations" title="Areas we serve" intro={`Seven areas across Haryana and Delhi NCR, all served from our offices in ${site.address.city}.`} />
 
       <Container className="pb-16 sm:pb-20">
         <Reveal as="ul" stagger={0.05} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

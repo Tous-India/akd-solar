@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { gsap, prefersReducedMotion, useGSAP } from "@/lib/gsap";
 import { nav, site, telHref, whatsappHref } from "@/lib/site";
-import { menuLinks } from "./menuLinks";
+import { locationGroups, menuLinks } from "./menuLinks";
 
 type Props = { open: boolean; onClose: () => void; pathname: string };
 
@@ -114,8 +114,18 @@ export function MobileMenu({ open, onClose, pathname }: Props) {
       </div>
 
       <nav aria-label="Mobile" className="relative flex-1 px-4 pt-4 pb-6 sm:px-6">
+        <Link
+          data-mm-item
+          href="/pm-surya-ghar-yojana"
+          onClick={onClose}
+          aria-current={pathname.startsWith("/pm-surya-ghar-yojana") ? "page" : undefined}
+          className="pm-gradient-pill mb-3 flex min-h-14 w-full items-center justify-between gap-3 rounded-full py-2 pr-2 pl-6 font-display text-lg font-bold text-ink shadow-[0_10px_24px_-14px_rgb(179_89_0/0.7)]"
+        >
+          PM Surya Ghar Yojana
+          <span className="rounded-full bg-[#D7141A] px-3 py-1.5 font-sans text-xs font-bold tracking-wide text-white uppercase">Subsidy</span>
+        </Link>
         <ul className="flex flex-col">
-          {nav.map((item) => {
+          {nav.filter((item) => !item.highlight).map((item) => {
             const active =
               item.href === "/"
                 ? pathname === "/"
@@ -148,15 +158,34 @@ export function MobileMenu({ open, onClose, pathname }: Props) {
                       className={`grid transition-[grid-template-rows] duration-500 ease-out-expo ${expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
                     >
                       <div className="overflow-hidden" inert={!expanded}>
-                        <ul>
-                          {menuLinks[kind].map((l) => (
-                            <li key={l.href}>
-                              <Link href={l.href} onClick={onClose} className="flex min-h-11 items-center text-base font-medium text-ink/80 hover:text-ink">
-                                {l.label}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
+                        {kind === "locations" ? (
+                          <div className="grid grid-cols-2 gap-4 pt-2">
+                            {locationGroups.map((g) => (
+                              <div key={g.title}>
+                                <p className={`text-xs font-bold tracking-[0.14em] uppercase ${g.tone === "sun" ? "text-sun-deep" : "text-panel"}`}>{g.title}</p>
+                                <ul>
+                                  {g.links.map((l) => (
+                                    <li key={l.label}>
+                                      <Link href={l.href} onClick={onClose} className="flex min-h-11 items-center text-base font-medium text-ink/80 hover:text-ink">
+                                        {l.label}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <ul>
+                            {menuLinks[kind].map((l) => (
+                              <li key={l.href}>
+                                <Link href={l.href} onClick={onClose} className="flex min-h-11 items-center text-base font-medium text-ink/80 hover:text-ink">
+                                  {l.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                         <Link
                           href={item.href}
                           onClick={onClose}

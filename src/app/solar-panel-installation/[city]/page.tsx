@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
-import { PageHero } from "@/components/ui/PageHero";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/motion/Reveal";
 import { FaqList } from "@/components/home/Faq";
 import { ContactForm } from "@/components/contact/ContactForm";
@@ -58,13 +58,14 @@ export default async function CityPage({ params }: Props) {
   return (
     <>
       <JsonLd data={[cityServiceSchema(loc), faqSchema(faqs)]} />
-      <PageHero
-        crumbs={[
+      <PageHeader
+        eyebrow={loc.region}
+        breadcrumb={[
           { name: "Areas We Serve", path: "/locations" },
           { name: loc.name, path },
         ]}
         title={`Solar Panel Installation in ${loc.name}`}
-        subtitle={loc.heroLine}
+        intro={loc.heroLine}
       />
 
       <Container>

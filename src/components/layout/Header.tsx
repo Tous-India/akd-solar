@@ -9,7 +9,7 @@ import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { gsap, MQ, useGSAP } from "@/lib/gsap";
 import { nav, type NavItem } from "@/lib/site";
-import { menuLinks } from "./menuLinks";
+import { locationGroups, menuLinks } from "./menuLinks";
 
 // Loaded on the first tap of the menu button, so the full menu is not hydrated on every page load
 const MobileMenu = dynamic(() => import("./MobileMenu").then((m) => m.MobileMenu), { ssr: false });
@@ -98,6 +98,24 @@ export function Header() {
                 const linkClass = `relative flex min-h-11 items-center gap-1 px-3 text-[0.92rem] font-medium whitespace-nowrap transition-colors 2xl:px-3.5 ${
                   active ? "text-ink after:absolute after:inset-x-3 after:bottom-1.5 after:h-0.5 after:rounded-full after:bg-sun" : "text-ink/70 hover:text-ink"
                 }`;
+                if (item.highlight) {
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        aria-current={active ? "page" : undefined}
+                        className={`relative flex min-h-11 items-center gap-1.5 px-3 text-[0.92rem] font-bold whitespace-nowrap 2xl:px-3.5 ${
+                          active ? "after:absolute after:inset-x-3 after:bottom-1.5 after:h-0.5 after:rounded-full after:bg-sun" : ""
+                        }`}
+                      >
+                        <span className="pm-gradient-text">{item.label}</span>
+                        <span className="rounded-full bg-[#D7141A] px-1.5 py-0.5 text-[0.62rem] leading-none font-bold tracking-wide text-white uppercase">
+                          Subsidy
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                }
                 if (!item.menu) {
                   return (
                     <li key={item.href}>
@@ -136,7 +154,39 @@ export function Header() {
                       {item.label}
                       <Icon name="chevronDown" className={`size-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
                     </button>
-                    {open ? (
+                    {open && kind === "locations" ? (
+                      <div id="locations-menu" className="absolute top-full left-1/2 -translate-x-1/2 pt-2">
+                        <div className="rounded-card border border-line bg-cream p-5 shadow-[0_16px_40px_-20px_rgb(16_24_40/0.35)]">
+                          <div className="flex divide-x divide-line">
+                            {locationGroups.map((g) => (
+                              <div key={g.title} className="min-w-40 px-5 first:pl-0 last:pr-0">
+                                <p className={`text-[0.72rem] font-bold tracking-[0.14em] uppercase ${g.tone === "sun" ? "text-sun-deep" : "text-panel"}`}>{g.title}</p>
+                                <ul className="mt-2">
+                                  {g.links.map((l) => (
+                                    <li key={l.label}>
+                                      <Link
+                                        href={l.href}
+                                        onClick={() => setOpenMenu(null)}
+                                        className="block py-1.5 text-[0.95rem] text-ink/80 transition-colors hover:text-ink"
+                                      >
+                                        {l.label}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                          <Link
+                            href="/locations"
+                            onClick={() => setOpenMenu(null)}
+                            className="mt-4 flex items-center gap-1.5 border-t border-line pt-3 text-sm font-semibold text-panel hover:text-ink"
+                          >
+                            View all areas <Icon name="arrowRight" className="size-4" />
+                          </Link>
+                        </div>
+                      </div>
+                    ) : open ? (
                       <div id={`${kind}-menu`} className="absolute top-full left-0 pt-2">
                         <ul className="min-w-56 rounded-card border border-line bg-white py-2 shadow-[0_16px_40px_-20px_rgb(16_24_40/0.35)]">
                           {menuLinks[kind].map((l) => (

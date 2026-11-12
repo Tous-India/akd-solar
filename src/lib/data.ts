@@ -6,6 +6,16 @@ export type FAQ = { q: string; a: string };
 
 // ───────────────────────── Solar solutions ─────────────────────────
 
+export type SolutionBlock = {
+  title: string;
+  /** about two lines */
+  intro: string;
+  bullets: string[];
+  specs: { label: string; value: string }[];
+  image: string;
+  imageAlt: string;
+};
+
 export type Solution = {
   slug: string;
   title: string;
@@ -18,6 +28,8 @@ export type Solution = {
   icon: IconName;
   image: string;
   whatYouGet: string[];
+  /** Image + text blocks, alternating sides. The first block's bullets are "What you get". */
+  blocks: SolutionBlock[];
   loans: ("residential" | "industrial")[];
   pumps?: boolean;
   msme?: boolean;
@@ -42,6 +54,39 @@ export const solutions: Solution[] = [
       `Inverters: ${site.brands.inverters.join(", ")}`,
       "PM Surya Ghar registration and net metering",
       `Installation in as little as ${site.numbers.installDays} days`,
+      "Free app monitoring for 25 years",
+    ],
+    blocks: [
+      {
+        title: "What you get",
+        intro: "One team from the first site visit to the day your net meter is fitted. You get a system sized to your monthly units, not a one-size package.",
+        bullets: [],
+        specs: [
+          { label: "Typical size", value: "3–10 kW" },
+          { label: "Payback", value: "~5 years" },
+          { label: "Monitoring", value: "25 years free" },
+        ],
+        image: "/images/projects/p19-1.jpg",
+        imageAlt: "Residential rooftop solar installed by AKD Solar in Sonipat",
+      },
+      {
+        title: "Sized for today and tomorrow",
+        intro: "We advise, not just sell. Inverters are sized for future load like EVs and ACs, and we file every subsidy form for you.",
+        bullets: [
+          "On-grid, hybrid or off-grid — chosen for your power cuts",
+          "PM Surya Ghar up to ₹78,000, plus the Haryana top-up where eligible",
+          `Solar loans at ${site.loans.residential.rate} via ${site.loans.residential.banks.join(", ")}`,
+          "Net metering with DHBVN or UHBVN handled end to end",
+          "AMC with scheduled cleaning and health checks",
+        ],
+        specs: [
+          { label: "Subsidy", value: "Up to ₹78,000" },
+          { label: "Loan from", value: site.loans.residential.rate },
+          { label: "Install", value: `${site.numbers.installDays} days` },
+        ],
+        image: "/images/projects/p20-1.jpg",
+        imageAlt: "Home solar panels on a raised structure, installed by AKD Solar",
+      },
     ],
     loans: ["residential"],
     faqs: [
@@ -65,6 +110,39 @@ export const solutions: Solution[] = [
       "Industrial-grade structures and earthing",
       "Remote generation monitoring",
       `Industrial solar loans at ${site.loans.industrial.rate}`,
+      "Free app monitoring for 25 years",
+    ],
+    blocks: [
+      {
+        title: "What you get",
+        intro: "Solar for shops, offices, factories, schools and farms. Daytime power is your biggest bill, and that is exactly when panels produce.",
+        bullets: [],
+        specs: [
+          { label: "Typical size", value: "10–500 kW" },
+          { label: "Net metering", value: "Up to 500 kW" },
+          { label: "Loans", value: site.loans.industrial.rate },
+        ],
+        image: "/images/solutions/commercial-buildings-wide.jpg",
+        imageAlt: "Apartment and commercial buildings with rooftop solar panels",
+      },
+      {
+        title: "Farms and individual sites",
+        intro: "Not every site has a big roof or a steady grid. We build ground-mount, hybrid and off-grid systems and solar pumps for farms.",
+        bullets: [
+          "Solar water pumps for tubewells and drip lines",
+          "Ground-mount structures where the roof is too small",
+          "Hybrid systems with batteries for long power cuts",
+          "Off-grid systems for sites without reliable supply",
+          "Help with Haryana MSME capital subsidy paperwork",
+        ],
+        specs: [
+          { label: "Systems", value: "On-grid · hybrid · off-grid" },
+          { label: "MSME subsidy", value: "Up to 30%" },
+          { label: "Monitoring", value: "25 years free" },
+        ],
+        image: "/images/projects/p02-1.jpg",
+        imageAlt: "Commercial rooftop solar plant installed by AKD Solar",
+      },
     ],
     loans: ["industrial"],
     pumps: true,
@@ -90,6 +168,39 @@ export const solutions: Solution[] = [
       "Rooftop plants on towers and common buildings",
       "Net metering on the society connection",
       "Monthly generation reports",
+      "Free app monitoring for 25 years",
+    ],
+    blocks: [
+      {
+        title: "What you get",
+        intro: "Solar for lifts, pumps, lighting and EV charging in common areas. We prepare everything the RWA committee needs to decide.",
+        bullets: [],
+        specs: [
+          { label: "Subsidy", value: "₹18,000 per kW" },
+          { label: "Plant size", value: "Up to 500 kW" },
+          { label: "Monitoring", value: "25 years free" },
+        ],
+        image: "/images/projects/p12-3.jpg",
+        imageAlt: "Solar panels on a housing society rooftop, installed by AKD Solar",
+      },
+      {
+        title: "Lower maintenance charges",
+        intro: "Common-area power is a large part of every society's monthly maintenance. A shared rooftop plant cuts it for every resident.",
+        bullets: [
+          "Runs lifts, water pumps and common lighting",
+          "EV charging points for residents",
+          "One net meter on the society connection",
+          "Clear monthly savings reports for residents",
+          "AMC with scheduled cleaning and health checks",
+        ],
+        specs: [
+          { label: "Saves on", value: "Common-area bills" },
+          { label: "Loans from", value: site.loans.residential.rate },
+          { label: "Support", value: "After-sales AMC" },
+        ],
+        image: "/images/projects/p12-1.jpg",
+        imageAlt: "Rooftop solar array on a residential tower",
+      },
     ],
     loans: ["residential"],
     societySubsidy: true,
@@ -157,20 +268,132 @@ export const applySteps = [
   { title: "Subsidy in your bank", text: "The subsidy is credited to your bank account after commissioning." },
 ];
 
+/** Scheme at a glance — pmsuryaghar.gov.in, as on 29 Oct 2026 */
+export const pmStatsAsOn = "29 Oct 2026";
+export const pmStats = {
+  applications: 8753829,
+  installations: 5477135,
+  households: 6480037,
+  target: 10000000,
+};
+export const pmStatCards = [
+  { value: "87,53,829", label: "Total applications" },
+  { value: "54,77,135", label: "Rooftop solar installations" },
+  { value: "64,80,037", label: "Households benefitted" },
+  { value: "1 crore", label: "Target households" },
+  { value: "₹75,000 cr+", label: "Investment" },
+  { value: "300 units", label: "Free electricity per month (up to)" },
+];
+
+/** Rooftop solar installations in India by year — MNRE (2024 as on 24 Dec 2024) */
+export const installsByYear = [
+  { year: "2019", value: 48295 },
+  { year: "2020", value: 126021 },
+  { year: "2021", value: 162466 },
+  { year: "2022", value: 149491 },
+  { year: "2023", value: 261432 },
+  { year: "2024", value: 722168 },
+];
+
+/** AKD Solar's own subsidy results, as on 30 Oct 2026 */
+export const akdSubsidyResults = { customers: 207, amount: 18063390, asOn: "30 Oct 2026" };
+
+/** Central subsidy + Haryana top-up (announced June 2024) */
+export const subsidyBreakdown = [
+  { size: "1 kW", central: 30000 },
+  { size: "2 kW", central: 60000 },
+  { size: "3 kW+", central: 78000 },
+];
+
+/** Haryana domestic tariff 2026-27 (w.e.f. 01.04.2026), simplified */
+export const haryanaTariff = [
+  {
+    category: "Category I",
+    load: "Up to 2 kW",
+    slabs: [
+      { units: "0–50", rate: "₹2.20" },
+      { units: "51–100", rate: "₹2.70" },
+    ],
+    fixed: "—",
+  },
+  {
+    category: "Category II",
+    load: "Up to 5 kW",
+    slabs: [
+      { units: "0–150", rate: "₹2.95" },
+      { units: "151–300", rate: "₹5.25" },
+      { units: "301–500", rate: "₹6.45" },
+      { units: "Above 500", rate: "₹7.10" },
+    ],
+    fixed: "₹50/kW above 300 units",
+  },
+  {
+    category: "Category III",
+    load: "Above 5 kW",
+    slabs: [
+      { units: "0–500", rate: "₹6.50" },
+      { units: "501–1000", rate: "₹7.15" },
+      { units: "Above 1000", rate: "₹7.50" },
+    ],
+    fixed: "₹75/kW",
+  },
+];
+
+export const pmEligibility = [
+  "Indian citizen",
+  "Owns a house with a roof suitable for solar panels",
+  "Valid electricity connection in your own name",
+  "Has not taken any other subsidy for rooftop solar",
+];
+
+export const pmDocuments = [
+  "Latest electricity bill",
+  "Aadhaar card",
+  "Bank passbook or cancelled cheque",
+  "Proof of house ownership",
+  "Passport-size photo",
+  "Income certificate (only for the Haryana top-up)",
+];
+
 export const pmFaqs: FAQ[] = [
   { q: "How much subsidy can I get?", a: "₹30,000 per kW for the first 2 kW and ₹18,000 for the 3rd kW. The central subsidy is capped at ₹78,000 for 3 kW and above." },
   { q: "When does the scheme close?", a: "Applications are open until 31 March 2027." },
   { q: "Is there extra subsidy in Haryana?", a: "Haryana announced an extra ₹50,000 for families earning up to ₹1.8 lakh a year and ₹20,000 for ₹1.8–3 lakh (June 2024). Confirm current status with DHBVN or UHBVN." },
   { q: "Who is eligible?", a: "Homeowners with an electricity connection in their name who have not claimed a rooftop solar subsidy before." },
+  { q: "How much free electricity will I get?", a: "The scheme aims to give households up to 300 units of free electricity a month from their own rooftop system. What you save depends on the system size and your usage." },
+  { q: "Which documents do I need?", a: "Your latest electricity bill, Aadhaar card, bank passbook or cancelled cheque, proof of house ownership and a photo. For the Haryana top-up you also need an income certificate." },
+  { q: "Can I take a loan for the rest of the cost?", a: `Yes. We help arrange residential solar loans at about ${site.loans.residential.rate} through ${site.loans.residential.banks.join(", ")}.` },
+  { q: "Who handles the paperwork?", a: "We do. AKD Solar files the portal application, installs the system and follows up with DHBVN or UHBVN for net metering until the subsidy reaches your bank account." },
 ];
 
 // ───────────────────────── Home ─────────────────────────
 
-export const processSteps: { icon: IconName; title: string; text: string; time: string }[] = [
-  { icon: "clipboard", title: "Free site visit", text: "We check your roof, shade and last few bills.", time: "Day 1" },
-  { icon: "pencil", title: "Design & quote", text: "A clear layout and itemised quote. No hidden extras.", time: "Day 2" },
-  { icon: "bolt", title: "Installation", text: "Our own crew installs panels, inverter and earthing.", time: `As little as ${site.numbers.installDays} days` },
-  { icon: "gauge", title: "Net metering & subsidy", text: "We handle the DISCOM meter and PM Surya Ghar subsidy.", time: "We follow up" },
+/** "How We Work" (from the company deck) */
+export const processSteps: { icon: IconName; title: string; text: string }[] = [
+  { icon: "users", title: "Consultation", text: "We visit, check your roof and bills, and listen to what you need." },
+  { icon: "pencil", title: "Design & Proposal", text: "A system sized for today and future load, with a clear quote." },
+  { icon: "bolt", title: "Installation", text: `Our own crew installs it, often in as little as ${site.numbers.installDays} days.` },
+  { icon: "gauge", title: "Monitoring & O&M", text: "Net metering, subsidy follow-up, app monitoring and upkeep." },
+];
+
+/** Home "About" block: right-hand feature icons */
+export const aboutFeatures: { icon: IconName; title: string; text: string }[] = [
+  { icon: "shield", title: "Safe Energy", text: "Earthing, surge protection and quality panels on every site." },
+  { icon: "factory", title: "Industrial Solutions", text: "Rooftop plants for shops, factories and MSMEs." },
+  { icon: "wrench", title: "Easy Installation", text: "One team from design to net metering." },
+];
+
+/** "AKD SOLAR stands for" — from the company deck (text used exactly) */
+export type StandsForItem = { letter: string; word: string; text: string; tone: "sun" | "green" | "blue" | "red" };
+export const akdStandsFor: StandsForItem[] = [
+  { letter: "A", word: "Advisor", tone: "sun", text: "We don't sell solar, we advise. Each project is designed around your needs. Payback in about 5 years for homes; larger inverters to cover future load like EVs." },
+  { letter: "K", word: "Knowledge", tone: "green", text: "Qualified engineers in sales and operations, and the latest technology in every project." },
+  { letter: "D", word: "Discipline", tone: "blue", text: "Best price without compromising quality, and timely delivery — we keep our word." },
+  { letter: "S", word: "Service", tone: "red", text: "After-sales support systems for peace of mind." },
+  { letter: "O", word: "Operations", tone: "sun", text: "Low-maintenance systems; our target is complaint-free sites." },
+  { letter: "L", word: "Loan Facility", tone: "green", text: "Solar loans for residential, commercial and industrial connections, plus help with MSME grants and subsidy." },
+  { letter: "A", word: "Accountable", tone: "blue", text: "Full transparency — references from our installed customers on request. Authorised Havells dealer since 2018." },
+  { letter: "R", word: "Real Time", tone: "red", text: "Free real-time monitoring on your phone app for 25 years." },
 ];
 
 // ───────────────────────── Projects ─────────────────────────

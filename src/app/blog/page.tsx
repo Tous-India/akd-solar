@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
-import { PageHero } from "@/components/ui/PageHero";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/motion/Reveal";
 import { CtaBand } from "@/components/home/CtaBand";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -31,10 +31,11 @@ export default function BlogIndex() {
   return (
     <>
       <JsonLd data={blogSchema} />
-      <PageHero
-        crumbs={[{ name: "Blog", path: "/blog" }]}
+      <PageHeader
+        breadcrumb={[{ name: "Blog", path: "/blog" }]}
+        eyebrow="Blog"
         title="Solar guides"
-        subtitle="Subsidy, costs and net metering, explained simply."
+        intro="Subsidy, costs and net metering, explained simply."
       />
 
       <section aria-label="Articles" className="pb-20 sm:pb-28">

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
-import { PageHero } from "@/components/ui/PageHero";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { blogRoutes, cityRoutes, solutionRoutes, staticRoutes } from "@/lib/routes";
 import { pageMeta } from "@/lib/seo";
 
@@ -21,7 +21,7 @@ const groups = [
 export default function SitemapPage() {
   return (
     <>
-      <PageHero crumbs={[{ name: "Sitemap", path: "/sitemap" }]} title="Sitemap" subtitle="Every page on our website." />
+      <PageHeader breadcrumb={[{ name: "Sitemap", path: "/sitemap" }]} eyebrow="Sitemap" title="Sitemap" intro="Every page on our website." />
       <section aria-label="All pages" className="pb-20 sm:pb-28">
         <Container className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {groups.map((g) => (

@@ -342,3 +342,39 @@ html.lenis body {
 html[data-strip="off"] .subsidy-strip {
   display: none;
 }
+
+/* "PM Surya Ghar Yojana" nav highlight. Text uses darker steps of the brand sun → gold → green so every
+   stop stays ≥ 4.5:1 on cream (#B35900, #8A6200, #23701A); the shine slowly slides the gradient. */
+.pm-gradient-text {
+  background-image: linear-gradient(100deg, #b35900 0%, #8a6200 35%, #23701a 60%, #8a6200 80%, #b35900 100%);
+  background-size: 250% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: pm-shine 6s ease-in-out infinite alternate;
+}
+
+/* Mobile menu pill: the brand gradient itself (#F7931E → #FFC93C → #2E8B1E); dark text sits on the orange/gold part */
+.pm-gradient-pill {
+  background-image: linear-gradient(100deg, #f7931e 0%, #ffc93c 55%, #2e8b1e 100%);
+}
+
+@keyframes pm-shine {
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pm-gradient-text {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .pm-gradient-text {
+    color: LinkText;
+    background: none;
+  }
+}

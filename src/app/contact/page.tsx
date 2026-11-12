@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
-import { PageHero } from "@/components/ui/PageHero";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/motion/Reveal";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { formatOffice, mailHref, mapsUrl, site, telHref } from "@/lib/site";
@@ -19,7 +19,7 @@ const mapEmbed = `https://maps.google.com/maps?q=${encodeURIComponent(head.mapsQ
 export default function ContactPage() {
   return (
     <>
-      <PageHero crumbs={[{ name: "Contact", path: "/contact" }]} title="Contact us" subtitle="Book a free site visit. We usually reply the same day." />
+      <PageHeader breadcrumb={[{ name: "Contact", path: "/contact" }]} eyebrow="Contact" title="Contact us" intro="Book a free site visit. We usually reply the same day." />
 
       <section aria-label="Enquiry form and contact details" className="pb-16 sm:pb-20">
         <Container className="grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-8">

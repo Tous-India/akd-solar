@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -67,18 +68,32 @@ export function TextBlock({ title, text, id }: { title: string; text: string; id
 export const AmcBlock = () => <TextBlock id="amc" title={amc.title} text={amc.text} />;
 export const PumpsBlock = () => <TextBlock id="pumps" title={pumps.title} text={pumps.text} />;
 
+/** MSME support over a commercial-buildings photo that fades from cream (text side) to transparent */
 export function MsmeBlock() {
   return (
-    <Block title={msme.title} id="msme">
-      <ul className="space-y-2 text-ink/85">
-        {msme.points.map((p) => (
-          <li key={p} className="flex gap-2.5">
-            <Icon name="check" className="mt-1 size-4 shrink-0 text-solar-deep" /> {p}
-          </li>
-        ))}
-      </ul>
-      <p className="mt-3 text-sm text-muted">{msme.note}</p>
-    </Block>
+    <Reveal as="section" aria-labelledby="msme" className="relative isolate overflow-hidden rounded-card border border-line bg-cream">
+      <Image
+        src="/images/solutions/commercial-buildings.jpg"
+        alt=""
+        fill
+        sizes="(min-width: 1024px) 1280px, 100vw"
+        className="-z-20 object-cover object-right"
+      />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-cream via-cream/95 to-cream/70 md:bg-gradient-to-r md:from-cream md:from-45% md:via-cream/85 md:via-60% md:to-cream/0" />
+      <div className="p-5 sm:p-6 md:max-w-[60%] md:py-8">
+        <h2 id="msme" className="font-display text-h3 font-bold text-ink">
+          {msme.title}
+        </h2>
+        <ul className="mt-3 space-y-2 text-ink/85">
+          {msme.points.map((p) => (
+            <li key={p} className="flex gap-2.5">
+              <Icon name="check" className="mt-1 size-4 shrink-0 text-solar-deep" /> {p}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-sm text-muted">{msme.note}</p>
+      </div>
+    </Reveal>
   );
 }
 

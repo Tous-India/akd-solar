@@ -1,4 +1,4 @@
-import { haryanaTopUp, msme, pmFaqs, solutions, subsidyTable } from "./data";
+import { akdSubsidyResults, haryanaTopUp, msme, pmFaqs, solutions, subsidyTable } from "./data";
 import { cityFaqs, locations } from "./locations";
 import { posts } from "./blog";
 import { absoluteUrl, formatOffice, site } from "./site";
@@ -20,6 +20,7 @@ export function llmsTxt() {
     `- Email: ${site.email}`,
     `- Website: ${site.url}`,
     `- Track record: ${site.numbers.years} years, ${site.numbers.installations} on-grid installations, ${site.numbers.customers} solar customers; installation in as little as ${site.numbers.installDays} days`,
+    `- PM Surya Ghar: helped ${akdSubsidyResults.customers} customers receive ${formatINR(akdSubsidyResults.amount)} in subsidy (as on ${akdSubsidyResults.asOn})`,
     `- Panels installed: ${site.brands.panels.join(", ")}. Inverters: ${site.brands.inverters.join(", ")}.`,
     `- Solar loans: residential ${site.loans.residential.rate} via ${site.loans.residential.banks.join(", ")}; industrial ${site.loans.industrial.rate}`,
     `- Areas served: ${locations.map((l) => l.name).join(", ")}`,

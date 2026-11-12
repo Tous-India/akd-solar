@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
-import { PageHero } from "@/components/ui/PageHero";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { QuickAnswer } from "@/components/ui/QuickAnswer";
 import { FaqList } from "@/components/home/Faq";
 import { CtaBand } from "@/components/home/CtaBand";
@@ -109,13 +109,14 @@ export default async function BlogPost({ params }: Props) {
   return (
     <>
       <JsonLd data={[articleSchema(post), faqSchema([post.quickAnswer, ...post.faqs])]} />
-      <PageHero
-        crumbs={[
+      <PageHeader
+        eyebrow={post.category}
+        breadcrumb={[
           { name: "Blog", path: "/blog" },
           { name: post.metaTitle, path: `/blog/${post.slug}` },
         ]}
         title={post.title}
-        subtitle={
+        intro={
           <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-base">
             <span className="font-semibold text-ink">{post.author.name}</span>
             <span aria-hidden>·</span>

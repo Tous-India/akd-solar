@@ -14,6 +14,9 @@ type Props = {
   variant?: "fade" | "clip";
   start?: string;
   id?: string;
+  role?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
 };
 
 /**
@@ -21,7 +24,7 @@ type Props = {
  * Desktop: ScrollTrigger (clip-path wipes, 1.1 → 1 scale). Phones/tablets: a light fade driven by an
  * IntersectionObserver, which avoids layout reads and keeps the main thread free.
  */
-export function Reveal({ as: Tag = "div", className, children, stagger, y = 36, delay = 0, variant = "fade", start = "top 86%", id }: Props) {
+export function Reveal({ as: Tag = "div", className, children, stagger, y = 36, delay = 0, variant = "fade", start = "top 86%", id, ...aria }: Props) {
   const ref = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -62,7 +65,7 @@ export function Reveal({ as: Tag = "div", className, children, stagger, y = 36, 
   );
 
   return (
-    <Tag ref={ref} className={className} id={id}>
+    <Tag ref={ref} className={className} id={id} {...aria}>
       {children}
     </Tag>
   );
