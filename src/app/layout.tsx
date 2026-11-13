@@ -9,7 +9,6 @@ import { MotionProvider } from "@/components/motion/MotionProvider";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import { SubsidyStrip } from "@/components/subsidy/SubsidyStrip";
-import { STRIP_KEY } from "@/components/subsidy/stripKey";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { siteGraph } from "@/lib/schema";
 import { site } from "@/lib/site";
@@ -70,10 +69,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en-IN" className={`${sora.variable} ${dmSans.variable}`} suppressHydrationWarning>
       <head>
         {/* Marks JS as available so intro elements can wait for GSAP (see globals.css) */}
-        {/* Also hides the subsidy strip before first paint if it was dismissed this session */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `document.documentElement.classList.add('js');try{if(sessionStorage.getItem('${STRIP_KEY}'))document.documentElement.dataset.strip='off'}catch(e){}`,
+            __html: `document.documentElement.classList.add('js')`,
           }}
         />
         <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM-friendly summary" />

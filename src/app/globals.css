@@ -142,12 +142,8 @@ html.lenis body {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scroll-padding-top: calc(6rem + var(--strip-h));
-    /* Height of the PM Surya Ghar countdown strip (0 once dismissed) */
+    /* Height of the fixed top strip (address + PM Surya Ghar countdown) */
     --strip-h: 34px;
-  }
-
-  html[data-strip="off"] {
-    --strip-h: 0px;
   }
 
   body {
@@ -336,11 +332,6 @@ html.lenis body {
 .range:focus-visible::-moz-range-thumb {
   outline: 3px solid var(--color-panel);
   outline-offset: 2px;
-}
-
-/* Dismissed subsidy strip is removed entirely (not just collapsed) so it leaves the tab order */
-html[data-strip="off"] .subsidy-strip {
-  display: none;
 }
 
 /* "PM Surya Ghar Yojana" nav highlight. Text uses darker steps of the brand sun → gold → green so every

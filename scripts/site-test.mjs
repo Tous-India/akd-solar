@@ -150,11 +150,13 @@ console.log("\n== Behaviour");
   check((await page.locator("#solutions-menu a").count()) === 3, "dropdown has 3 links");
   await page.keyboard.press("Escape");
 
-  // strip dismissal persists for the session
-  await page.getByRole("button", { name: "Hide subsidy countdown" }).click();
-  check(!(await page.locator(".subsidy-strip").isVisible()), "strip hides on dismiss");
-  await page.reload({ waitUntil: "networkidle" });
-  check(!(await page.locator(".subsidy-strip").isVisible()), "strip stays hidden after reload");
+  // strip is permanent: no close button, stays fixed above the header with the office address
+  check((await page.locator(".subsidy-strip button").count()) === 0, "strip has no close button");
+  check(await page.locator(".subsidy-strip a[href*='google.com/maps']").isVisible(), "strip shows the office address");
+  await page.mouse.wheel(0, 3000);
+  await page.waitForTimeout(600);
+  const stuck = await page.evaluate(() => [document.querySelector(".subsidy-strip").getBoundingClientRect().top, Math.round(document.querySelector("header").getBoundingClientRect().top)]);
+  check(stuck[0] === 0 && stuck[1] === 34, `strip and header stay fixed on scroll (${stuck.join(",")})`);
   check(errors.length === 0, `home behaviour: no console errors${errors.length ? " → " + errors.join(" | ") : ""}`);
   await ctx.close();
 }
