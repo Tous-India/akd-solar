@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/motion/Reveal";
 import { Countdown } from "@/components/subsidy/Countdown";
+import { PmHeroVisual } from "@/components/subsidy/PmHeroVisual";
 import { FaqList } from "@/components/home/Faq";
 import { InlineCta } from "@/components/solutions/Blocks";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -72,6 +73,7 @@ export default function PmSuryaGharPage() {
         eyebrow="Government subsidy"
         title="PM Surya Ghar Yojana"
         intro="Up to ₹78,000 subsidy for home rooftop solar. Apply by 31 March 2027."
+        visual={<PmHeroVisual />}
       />
 
       <Container>

@@ -378,3 +378,23 @@ html[data-strip="off"] .subsidy-strip {
     background: none;
   }
 }
+
+/* PM Surya Ghar header banner: settle-in zoom + one sheen sweep */
+@keyframes pm-hero-zoom {
+  from { transform: scale(1.06); }
+  to { transform: scale(1); }
+}
+@keyframes pm-hero-sheen {
+  from { transform: translateX(0) skewX(-18deg); opacity: 0; }
+  20% { opacity: 1; }
+  to { transform: translateX(450%) skewX(-18deg); opacity: 0; }
+}
+.pm-hero-img { animation: pm-hero-zoom 1.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.pm-hero-sheen {
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.45), transparent);
+  animation: pm-hero-sheen 1.6s 0.6s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pm-hero-img, .pm-hero-sheen { animation: none; }
+  .pm-hero-sheen { display: none; }
+}

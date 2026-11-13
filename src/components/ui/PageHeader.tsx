@@ -16,6 +16,8 @@ type Props = {
   /** One line on desktop */
   intro?: ReactNode;
   children?: ReactNode;
+  /** Optional artwork shown under the breadcrumb. When set, eyebrow/h1/intro stay in the DOM for SEO but are visually hidden (the artwork carries them). */
+  visual?: ReactNode;
 };
 
 /**
@@ -26,7 +28,7 @@ type Props = {
  * Text colours are AA on every part of the band, glow included: breadcrumb ink/65 (4.8:1), eyebrow #8F4400 (4.9:1),
  * intro ink/70 (5.6:1), h1 ink (12.5:1).
  */
-export function PageHeader({ breadcrumb, eyebrow, title, intro, children }: Props) {
+export function PageHeader({ breadcrumb, eyebrow, title, intro, children, visual }: Props) {
   return (
     <section className="relative mb-8 overflow-hidden border-b md:mb-12 border-[rgb(16_24_40/0.06)] bg-[linear-gradient(120deg,#FFF3D6_0%,#FFE6BF_35%,#FDF0E2_65%,#E9F5E1_100%)] pt-[96px] pb-6 sm:pt-[108px] sm:pb-8 xl:pt-[116px]">
       <JsonLd data={breadcrumbSchema(breadcrumb)} />
@@ -35,7 +37,7 @@ export function PageHeader({ breadcrumb, eyebrow, title, intro, children }: Prop
         <div className="absolute -top-[200px] right-[-160px] aspect-square w-[min(620px,120vw)] rounded-full bg-[radial-gradient(circle,rgb(247_147_30/0.25)_0%,rgb(247_147_30/0.12)_35%,transparent_68%)] blur-2xl sm:right-[-80px]" />
       </div>
       <Container className="relative">
-        <IntroAnimate className="max-w-4xl">
+        <IntroAnimate className={visual ? undefined : "max-w-4xl"}>
           <nav aria-label="Breadcrumb" data-intro className="text-sm text-ink/65">
             <ol className="flex items-center gap-x-2 overflow-hidden whitespace-nowrap">
               <li className="shrink-0">
@@ -64,6 +66,8 @@ export function PageHeader({ breadcrumb, eyebrow, title, intro, children }: Prop
               })}
             </ol>
           </nav>
+          {visual ? <div data-intro>{visual}</div> : null}
+          <div className={visual ? "sr-only" : undefined}>
           <div data-intro className="mt-3 sm:mt-4">
             <Eyebrow tone="band">{eyebrow}</Eyebrow>
           </div>
@@ -75,6 +79,7 @@ export function PageHeader({ breadcrumb, eyebrow, title, intro, children }: Prop
               {intro}
             </div>
           ) : null}
+          </div>
           {children ? (
             <div data-intro className="mt-4">
               {children}
