@@ -12,14 +12,14 @@ function BannerPicture({ banner, first }: { banner: Banner; first: boolean }) {
   const common = { alt: banner.alt, sizes: "100vw", priority: first, quality: 80 };
   const {
     props: { srcSet: desktopSrcSet },
-  } = getImageProps({ ...common, src: banner.desktop, width: 1920, height: 600 });
-  const { props: mobile } = getImageProps({ ...common, src: banner.mobile ?? banner.desktop, width: banner.mobile ? 1080 : 1920, height: banner.mobile ? 1080 : 600 });
+  } = getImageProps({ ...common, src: banner.desktop, width: 1920, height: 640 });
+  const { props: mobile } = getImageProps({ ...common, src: banner.mobile ?? banner.desktop, width: banner.mobile ? 1200 : 1920, height: banner.mobile ? 800 : 640 });
 
   return (
     <picture>
       <source media="(min-width: 768px)" srcSet={desktopSrcSet} sizes="100vw" />
       {/* eslint-disable-next-line jsx-a11y/alt-text -- alt comes from getImageProps */}
-      <img {...mobile} loading={first ? "eager" : "lazy"} fetchPriority={first ? "high" : "auto"} className="absolute inset-0 size-full object-cover" />
+      <img {...mobile} loading={first ? "eager" : "lazy"} fetchPriority={first ? "high" : "auto"} className="absolute inset-0 size-full object-cover object-left" />
     </picture>
   );
 }
@@ -85,7 +85,7 @@ export function BannerSlider() {
       onMouseLeave={() => setHovered(false)}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
-      className="relative aspect-square w-full overflow-hidden bg-navy outline-none focus-visible:ring-4 focus-visible:ring-gold focus-visible:ring-inset md:aspect-[16/5]"
+      className="relative aspect-[3/2] w-full overflow-hidden bg-navy outline-none focus-visible:ring-4 focus-visible:ring-gold focus-visible:ring-inset md:aspect-[3/1]"
     >
       {banners.map((b, i) => {
         const active = i === index;

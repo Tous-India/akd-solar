@@ -20,7 +20,7 @@ npm run build && npm start
 | Card corner radius (one token) | `--radius-card` in `src/app/globals.css` → `rounded-card` |
 
 ## Homepage banners
-To change homepage banners: put images in public/images/banners/ (desktop 1920×600, mobile 1080×1080) and edit src/lib/banners.ts.
+To change homepage banners: put images in public/images/banners/ (desktop 1920×640 = 3:1, mobile 1200×800 = 3:2; the images carry their own text) and edit src/lib/banners.ts.
 
 ## Add a city
 Append one entry to `locations` in `src/lib/locations.ts` (slug, name, region, DISCOM, a genuinely local intro,
