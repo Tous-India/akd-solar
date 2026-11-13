@@ -9,7 +9,6 @@ import { banners, type Banner } from "@/lib/banners";
 const INTERVAL = 5000;
 
 function BannerPicture({ banner, first }: { banner: Banner; first: boolean }) {
-  const contain = banner.fit === "contain";
   const common = { alt: banner.alt, sizes: "100vw", priority: first, quality: 80 };
   const {
     props: { srcSet: desktopSrcSet },
@@ -18,14 +17,13 @@ function BannerPicture({ banner, first }: { banner: Banner; first: boolean }) {
 
   return (
     <picture>
-      {/* a contained 3:2 image in the 3:1 slot is half the viewport wide */}
-      <source media="(min-width: 768px)" srcSet={desktopSrcSet} sizes={contain ? "50vw" : "100vw"} />
+      <source media="(min-width: 768px)" srcSet={desktopSrcSet} sizes="100vw" />
       {/* eslint-disable-next-line jsx-a11y/alt-text -- alt comes from getImageProps */}
       <img
         {...mobile}
         loading={first ? "eager" : "lazy"}
         fetchPriority={first ? "high" : "auto"}
-        className={`absolute inset-0 size-full object-cover ${contain ? "object-center md:object-contain" : "object-left"}`}
+        className="absolute inset-0 size-full object-cover object-left"
       />
     </picture>
   );
@@ -105,9 +103,7 @@ export function BannerSlider() {
             aria-label={`${i + 1} of ${count}`}
             aria-hidden={!active}
             inert={!active}
-            className={`absolute inset-0 ease-out ${reduced ? "" : "transition-opacity duration-[600ms]"} ${active ? "z-[1] opacity-100" : "opacity-0"} ${
-              b.fit === "contain" ? "md:bg-[linear-gradient(180deg,#CFE6FB_0%,#EAF4FD_60%,#F7FBFF_100%)]" : ""
-            }`}
+            className={`absolute inset-0 ease-out ${reduced ? "" : "transition-opacity duration-[600ms]"} ${active ? "z-[1] opacity-100" : "opacity-0"}`}
           >
             {b.href ? (
               <Link href={b.href} className="absolute inset-0 block" tabIndex={active ? 0 : -1}>
