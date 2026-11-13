@@ -12,7 +12,7 @@ export function SolutionCards({ headingLevel = "h3" }: { headingLevel?: "h2" | "
   return (
     <Reveal as="ul" stagger={0.08} className="grid gap-5 md:grid-cols-3">
       {solutions.map((s) => {
-        const d = dims(s.image);
+        const d = s.imageSize ?? dims(s.image);
         return (
           <li key={s.slug}>
             <Link
@@ -22,11 +22,11 @@ export function SolutionCards({ headingLevel = "h3" }: { headingLevel?: "h2" | "
               <div className="relative aspect-[16/10] overflow-hidden">
                 <Image
                   src={s.image}
-                  alt={`${s.title} solar installation by AKD Solar`}
+                  alt={s.imageAlt ?? `${s.title} solar installation by AKD Solar`}
                   width={d.width}
                   height={d.height}
                   sizes="(min-width: 768px) 33vw, 100vw"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out-expo group-hover:scale-[1.04]"
+                  className="h-full w-full object-cover object-center transition-transform duration-700 ease-out-expo group-hover:scale-[1.04]"
                 />
               </div>
               <div className="flex flex-1 flex-col p-5">

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/motion/Reveal";
@@ -24,8 +25,21 @@ export function FeatureBlock({ block, bullets = block.bullets, flip = false, pri
       aria-labelledby={id}
       className="grid items-stretch overflow-hidden rounded-card border border-line bg-white lg:grid-cols-12"
     >
-      <div className={`relative aspect-[16/10] lg:col-span-5 lg:aspect-auto lg:h-full lg:min-h-[340px] ${flip ? "lg:order-2" : ""}`}>
-        <Image src={block.image} alt={block.imageAlt} fill priority={priority} sizes="(min-width: 1024px) 42vw, 100vw" className="object-cover" />
+      {/* A small image (imageMaxWidth) is never stretched past its natural width: below lg it sits centred, inset in the card */}
+      <div
+        style={block.imageMaxWidth ? ({ "--img-max": `${block.imageMaxWidth}px` } as CSSProperties) : undefined}
+        className={`relative aspect-[16/10] lg:col-span-5 lg:aspect-auto lg:h-full lg:min-h-[340px] ${flip ? "lg:order-2" : ""} ${
+          block.imageMaxWidth ? "mx-auto w-full max-w-[var(--img-max)] sm:mt-7 sm:overflow-hidden sm:rounded-card lg:mt-0 lg:max-w-[var(--img-max)] lg:rounded-none" : ""
+        }`}
+      >
+        <Image
+          src={block.image}
+          alt={block.imageAlt}
+          fill
+          priority={priority}
+          sizes={block.imageMaxWidth ? `(min-width: 1024px) 42vw, ${block.imageMaxWidth}px` : "(min-width: 1024px) 42vw, 100vw"}
+          className="object-cover object-center"
+        />
       </div>
       <div className="flex flex-col justify-center p-5 sm:p-7 lg:col-span-7 lg:px-9 lg:py-7">
         <h2 id={id} className="font-display text-h3 font-bold text-ink">

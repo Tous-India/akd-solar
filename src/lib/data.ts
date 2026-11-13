@@ -14,6 +14,8 @@ export type SolutionBlock = {
   specs: { label: string; value: string }[];
   image: string;
   imageAlt: string;
+  /** Natural width of a small image: it is never shown wider than this */
+  imageMaxWidth?: number;
 };
 
 export type Solution = {
@@ -27,6 +29,10 @@ export type Solution = {
   intro: string;
   icon: IconName;
   image: string;
+  /** Card image alt; defaults to "<title> solar installation by AKD Solar" (set it when the photo is not our own work) */
+  imageAlt?: string;
+  /** Natural size of an image that is not in projects.generated */
+  imageSize?: { width: number; height: number };
   whatYouGet: string[];
   /** Image + text blocks, alternating sides. The first block's bullets are "What you get". */
   blocks: SolutionBlock[];
@@ -47,7 +53,7 @@ export const solutions: Solution[] = [
     short: "Cut your home bill with up to ₹78,000 subsidy.",
     intro: "Rooftop solar sized to your monthly units. We handle the PM Surya Ghar subsidy and net metering.",
     icon: "home",
-    image: "/images/projects/p19-1.jpg",
+    image: "/images/solutions/residential-house.jpg",
     whatYouGet: [
       "Free site visit and shadow check",
       `Panels: ${site.brands.panels.join(", ")}`,
@@ -66,8 +72,8 @@ export const solutions: Solution[] = [
           { label: "Payback", value: "~5 years" },
           { label: "Monitoring", value: "25 years free" },
         ],
-        image: "/images/projects/p19-1.jpg",
-        imageAlt: "Residential rooftop solar installed by AKD Solar in Sonipat",
+        image: "/images/solutions/residential-house.jpg",
+        imageAlt: "House in Sonipat with elevated rooftop solar installed by AKD Solar",
       },
       {
         title: "Sized for today and tomorrow",
@@ -101,9 +107,11 @@ export const solutions: Solution[] = [
     title: "Commercial & Individual",
     heading: "Commercial & individual solar",
     short: "Lower daytime power costs for shops, offices and factories.",
-    intro: "Rooftop and ground-mount plants for shops, offices, factories, schools and farms. Lower daytime power costs with a fast payback.",
+    intro: "Rooftop solar for shops, offices, factories, schools, hospitals and apartment buildings. Lower daytime power costs with a fast payback.",
     icon: "factory",
-    image: "/images/projects/p02-1.jpg",
+    image: "/images/solutions/commercial-apartments.jpg",
+    imageAlt: "Apartment and commercial buildings with rooftop solar panels — AKD Solar",
+    imageSize: { width: 636, height: 420 },
     whatYouGet: [
       "Load study from your last 12 bills",
       "On-grid plants with net metering up to 500 kW",
@@ -115,23 +123,24 @@ export const solutions: Solution[] = [
     blocks: [
       {
         title: "What you get",
-        intro: "Solar for shops, offices, factories, schools and farms. Daytime power is your biggest bill, and that is exactly when panels produce.",
+        intro: "Solar for shops, offices, factories, schools and apartment buildings. Daytime power is your biggest bill, and that is exactly when panels produce.",
         bullets: [],
         specs: [
           { label: "Typical size", value: "10–500 kW" },
           { label: "Net metering", value: "Up to 500 kW" },
           { label: "Loans", value: site.loans.industrial.rate },
         ],
-        image: "/images/solutions/commercial-buildings-wide.jpg",
-        imageAlt: "Apartment and commercial buildings with rooftop solar panels",
+        image: "/images/solutions/commercial-apartments.jpg",
+        imageAlt: "Apartment and commercial buildings with rooftop solar panels — AKD Solar",
+        imageMaxWidth: 636,
       },
       {
-        title: "Farms and individual sites",
-        intro: "Not every site has a big roof or a steady grid. We build ground-mount and hybrid systems and solar pumps for farms.",
+        title: "Buildings and individual sites",
+        intro: "Offices, showrooms, schools, hospitals, apartment blocks and independent buildings. Each system is sized to your sanctioned load and roof.",
         bullets: [
-          "Solar water pumps for tubewells and drip lines",
-          "Ground-mount structures where the roof is too small",
-          "Hybrid systems with batteries for long power cuts",
+          "Rooftop systems sized to your sanctioned load",
+          "Elevated structures for shaded or crowded rooftops",
+          "Havells, TATA, Waaree and Vikram panels",
           "Help with Haryana MSME capital subsidy paperwork",
         ],
         specs: [
@@ -139,19 +148,19 @@ export const solutions: Solution[] = [
           { label: "MSME subsidy", value: "Up to 30%" },
           { label: "Monitoring", value: "25 years free" },
         ],
-        image: "/images/projects/p02-1.jpg",
-        imageAlt: "Commercial rooftop solar plant installed by AKD Solar",
+        image: "/images/solutions/commercial-1.jpg",
+        imageAlt: "Rooftop solar on commercial and apartment buildings — AKD Solar",
       },
     ],
     loans: ["industrial"],
-    pumps: true,
+    pumps: false,
     msme: true,
     faqs: [
       { q: "Can a factory get a subsidy?", a: "Haryana MSMEs can get a 30% capital subsidy, up to ₹35 lakh in Sub-prime and Prime focus areas or ₹25 lakh in Core and Intermediate areas, subject to current policy." },
       { q: "How big can a commercial plant be?", a: "Net metering is available up to 500 kW. Each kW needs about 80–100 sq ft of shadow-free roof." },
     ],
     metaTitle: "Commercial & Industrial Solar in Haryana",
-    metaDescription: "Solar for shops, offices, factories and farms in Haryana: net metering up to 500 kW, MSME capital subsidy support and industrial loans at 8.50–9.25%.",
+    metaDescription: "Solar for shops, offices, factories and apartment buildings in Haryana: net metering up to 500 kW, MSME capital subsidy support and industrial loans at 8.50–9.25%.",
   },
   {
     slug: "housing-societies",
@@ -160,7 +169,7 @@ export const solutions: Solution[] = [
     short: "Power common areas and cut maintenance bills.",
     intro: "Solar for lifts, pumps, lighting and EV charging in common areas. PM Surya Ghar support is available for RWAs and group housing societies.",
     icon: "users",
-    image: "/images/projects/p12-3.jpg",
+    image: "/images/solutions/commercial-2.jpg",
     whatYouGet: [
       "Common-area load study for the RWA",
       "Proposal and subsidy paperwork for the committee",
@@ -179,8 +188,8 @@ export const solutions: Solution[] = [
           { label: "Plant size", value: "Up to 500 kW" },
           { label: "Monitoring", value: "25 years free" },
         ],
-        image: "/images/projects/p12-3.jpg",
-        imageAlt: "Solar panels on a housing society rooftop, installed by AKD Solar",
+        image: "/images/solutions/commercial-2.jpg",
+        imageAlt: "Housing society towers with rooftop solar panels",
       },
       {
         title: "Lower maintenance charges",
