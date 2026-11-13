@@ -12,10 +12,13 @@ type Props = {
   as?: "h1" | "h2";
 };
 
-export function Eyebrow({ children, tone = "light" }: { children: ReactNode; tone?: "light" | "dark" }) {
+/** tone "band": deeper orange that keeps 4.9:1 on the page-header gradient band, glow included */
+export function Eyebrow({ children, tone = "light" }: { children: ReactNode; tone?: "light" | "dark" | "band" }) {
   return (
     <span
-      className={`inline-flex items-center gap-2.5 text-[0.8rem] font-bold uppercase tracking-[0.16em] ${tone === "dark" ? "text-gold" : "text-sun-deep"}`}
+      className={`inline-flex items-center gap-2.5 text-[0.8rem] font-bold uppercase tracking-[0.16em] ${
+        tone === "dark" ? "text-gold" : tone === "band" ? "text-[#8F4400]" : "text-sun-deep"
+      }`}
     >
       <svg viewBox="0 0 20 12" className="h-3 w-5 shrink-0" aria-hidden>
         <path d="M2 11a8 8 0 0 1 16 0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />

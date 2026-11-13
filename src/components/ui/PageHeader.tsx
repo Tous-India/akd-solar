@@ -19,20 +19,24 @@ type Props = {
 };
 
 /**
- * Compact inner-page header: breadcrumb → eyebrow → h1 → one-line intro, over a small sun glow and panel grid.
+ * Compact inner-page header: breadcrumb → eyebrow → h1 → one-line intro on a full-width "sunrise" gradient band
+ * (gold → cream → light green) with a soft sun glow on the right, faint grid lines and a 1px bottom edge.
+ * The band starts directly under the strip, so the transparent fixed header sits on the same gradient.
  * Top padding = fixed header height (68px / 76px at xl) + 40px (28px on phones); bottom 32px (24px on phones).
+ * Text colours are AA on every part of the band, glow included: breadcrumb ink/65 (4.8:1), eyebrow #8F4400 (4.9:1),
+ * intro ink/70 (5.6:1), h1 ink (12.5:1).
  */
 export function PageHeader({ breadcrumb, eyebrow, title, intro, children }: Props) {
   return (
-    <section className="relative overflow-hidden pt-[96px] pb-6 sm:pt-[108px] sm:pb-8 xl:pt-[116px]">
+    <section className="relative overflow-hidden border-b border-[rgb(16_24_40/0.06)] bg-[linear-gradient(120deg,#FFF3D6_0%,#FFE6BF_35%,#FDF0E2_65%,#E9F5E1_100%)] pt-[96px] pb-6 sm:pt-[108px] sm:pb-8 xl:pt-[116px]">
       <JsonLd data={breadcrumbSchema(breadcrumb)} />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="panel-grid absolute inset-0 [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
-        <div className="sun-glow absolute -top-[220px] right-[-140px] aspect-square w-[min(560px,110vw)] rounded-full opacity-80 sm:right-[-60px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgb(16_24_40/0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgb(16_24_40/0.06)_1px,transparent_1px)] bg-[size:64px_44px] [mask-image:linear-gradient(to_bottom,black,transparent_90%)]" />
+        <div className="absolute -top-[200px] right-[-160px] aspect-square w-[min(620px,120vw)] rounded-full bg-[radial-gradient(circle,rgb(247_147_30/0.25)_0%,rgb(247_147_30/0.12)_35%,transparent_68%)] blur-2xl sm:right-[-80px]" />
       </div>
       <Container className="relative">
         <IntroAnimate className="max-w-4xl">
-          <nav aria-label="Breadcrumb" data-intro className="text-sm text-muted">
+          <nav aria-label="Breadcrumb" data-intro className="text-sm text-ink/65">
             <ol className="flex items-center gap-x-2 overflow-hidden whitespace-nowrap">
               <li className="shrink-0">
                 <Link href="/" className="rounded hover:text-ink">
@@ -61,13 +65,13 @@ export function PageHeader({ breadcrumb, eyebrow, title, intro, children }: Prop
             </ol>
           </nav>
           <div data-intro className="mt-3 sm:mt-4">
-            <Eyebrow>{eyebrow}</Eyebrow>
+            <Eyebrow tone="band">{eyebrow}</Eyebrow>
           </div>
           <h1 data-intro className="mt-2 font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.12] font-extrabold tracking-[-0.03em] text-ink">
             {title}
           </h1>
           {intro ? (
-            <div data-intro className="mt-1.5 max-w-3xl text-[0.95rem] leading-snug text-muted sm:mt-2 sm:text-lg sm:leading-relaxed">
+            <div data-intro className="mt-1.5 max-w-3xl text-[0.95rem] leading-snug text-ink/70 sm:mt-2 sm:text-lg sm:leading-relaxed">
               {intro}
             </div>
           ) : null}
