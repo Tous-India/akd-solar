@@ -28,7 +28,7 @@ type Props = {
  */
 export function PageHeader({ breadcrumb, eyebrow, title, intro, children }: Props) {
   return (
-    <section className="relative overflow-hidden border-b border-[rgb(16_24_40/0.06)] bg-[linear-gradient(120deg,#FFF3D6_0%,#FFE6BF_35%,#FDF0E2_65%,#E9F5E1_100%)] pt-[96px] pb-6 sm:pt-[108px] sm:pb-8 xl:pt-[116px]">
+    <section className="relative mb-8 overflow-hidden border-b md:mb-12 border-[rgb(16_24_40/0.06)] bg-[linear-gradient(120deg,#FFF3D6_0%,#FFE6BF_35%,#FDF0E2_65%,#E9F5E1_100%)] pt-[96px] pb-6 sm:pt-[108px] sm:pb-8 xl:pt-[116px]">
       <JsonLd data={breadcrumbSchema(breadcrumb)} />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgb(16_24_40/0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgb(16_24_40/0.06)_1px,transparent_1px)] bg-[size:64px_44px] [mask-image:linear-gradient(to_bottom,black,transparent_90%)]" />

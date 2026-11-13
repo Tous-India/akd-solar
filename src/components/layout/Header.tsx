@@ -104,13 +104,16 @@ export function Header() {
                       <Link
                         href={item.href}
                         aria-current={active ? "page" : undefined}
-                        className={`relative flex min-h-11 items-center gap-1.5 px-3 text-[0.92rem] font-bold whitespace-nowrap 2xl:px-3.5 ${
+                        className={`relative flex min-h-11 items-center px-3 text-[0.92rem] font-bold whitespace-nowrap 2xl:px-3.5 ${
                           active ? "after:absolute after:inset-x-3 after:bottom-1.5 after:h-0.5 after:rounded-full after:bg-sun" : ""
                         }`}
                       >
-                        <span className="pm-gradient-text">{item.label}</span>
-                        <span className="rounded-full bg-[#D7141A] px-1.5 py-0.5 text-[0.62rem] leading-none font-bold tracking-wide text-white uppercase">
-                          Subsidy
+                        {/* Badge sits on the text's top-right corner like a notification badge, so the link keeps its normal width */}
+                        <span className="relative">
+                          <span className="pm-gradient-text">{item.label}</span>
+                          <span className="absolute -top-[10px] -right-[14px] rounded-[5px] bg-[#D7141A] px-[5px] py-px text-[9px] leading-[1.2] font-bold tracking-wide text-white uppercase">
+                            <span className="sr-only"> — </span>Subsidy
+                          </span>
                         </span>
                       </Link>
                     </li>

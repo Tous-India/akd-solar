@@ -41,8 +41,8 @@ export function AboutIntro() {
           </h2>
           <p className="mt-3 leading-relaxed text-muted">
             {site.legalName} is a solar EPC and O&amp;M company in Sonipat, founded in {site.foundedYear} by Er. (Dr.) Ankush Dahiya — Chartered
-            Engineer, M.Tech Power Systems. Authorised Havells dealer since {site.havellsDealerSince}. We design, install and maintain on-grid,
-            hybrid and off-grid systems for homes, societies, shops and industries.
+            Engineer, M.Tech Power Systems. Authorised Havells dealer since {site.havellsDealerSince}. We design, install and maintain on-grid
+            and hybrid systems for homes, societies, shops and industries.
           </p>
           <Link href="/about" className="mt-4 inline-flex min-h-11 items-center gap-2 font-semibold text-panel hover:text-ink">
             More about us <Icon name="arrowRight" className="size-4" />

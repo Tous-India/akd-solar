@@ -343,10 +343,6 @@ export const projectsData = [
 ] as const;
 
 export const imageDims: Record<string, { width: number; height: number }> = {
-  "/images/projects/offgrid-villages-collage.jpg": {
-    "width": 947,
-    "height": 692
-  },
   "/images/projects/ongrid-works-collage.jpg": {
     "width": 962,
     "height": 723

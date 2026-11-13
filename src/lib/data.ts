@@ -73,7 +73,7 @@ export const solutions: Solution[] = [
         title: "Sized for today and tomorrow",
         intro: "We advise, not just sell. Inverters are sized for future load like EVs and ACs, and we file every subsidy form for you.",
         bullets: [
-          "On-grid, hybrid or off-grid — chosen for your power cuts",
+          "On-grid or hybrid — chosen for your power cuts",
           "PM Surya Ghar up to ₹78,000, plus the Haryana top-up where eligible",
           `Solar loans at ${site.loans.residential.rate} via ${site.loans.residential.banks.join(", ")}`,
           "Net metering with DHBVN or UHBVN handled end to end",
@@ -127,16 +127,15 @@ export const solutions: Solution[] = [
       },
       {
         title: "Farms and individual sites",
-        intro: "Not every site has a big roof or a steady grid. We build ground-mount, hybrid and off-grid systems and solar pumps for farms.",
+        intro: "Not every site has a big roof or a steady grid. We build ground-mount and hybrid systems and solar pumps for farms.",
         bullets: [
           "Solar water pumps for tubewells and drip lines",
           "Ground-mount structures where the roof is too small",
           "Hybrid systems with batteries for long power cuts",
-          "Off-grid systems for sites without reliable supply",
           "Help with Haryana MSME capital subsidy paperwork",
         ],
         specs: [
-          { label: "Systems", value: "On-grid · hybrid · off-grid" },
+          { label: "Systems", value: "On-grid & hybrid" },
           { label: "MSME subsidy", value: "Up to 30%" },
           { label: "Monitoring", value: "25 years free" },
         ],
@@ -220,7 +219,6 @@ export function getSolution(slug: string) {
 export const systemTypes = [
   { name: "On-grid", text: "Connected to the grid with net metering. Lowest cost and subsidy-eligible." },
   { name: "Hybrid", text: "Grid plus batteries, so essential loads keep running during power cuts." },
-  { name: "Off-grid", text: "Battery-only systems for sites without reliable grid supply." },
 ];
 
 export const amc = {
@@ -420,10 +418,6 @@ export function projectCaption(p: Project) {
 /** Six strong photos for the home page */
 export const featuredProjectIds = ["p19", "p01", "p12", "p20", "p02", "p17"];
 
-export const offgridVillages = [
-  "Deepalpur", "Khanda", "Shamri", "Kakroi", "Rolad", "Nayat", "Pilana", "Madina", "Bhadana", "Khewra", "Kurad",
-  "Singhpura", "Shersa", "Jaati", "Naina", "Garhi Sisana", "Nizampur Majra", "Bahu Akbarpur", "Mahra", "Atyal", "Rattangarh",
-];
 
 // ───────────────────────── About ─────────────────────────
 

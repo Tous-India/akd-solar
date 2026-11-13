@@ -20,7 +20,7 @@ function Block({ title, children, id }: { title: string; children: ReactNode; id
 export function SystemTypes() {
   return (
     <Block title="System types" id="system-types">
-      <ul className="grid gap-3 md:grid-cols-3">
+      <ul className="grid gap-3 md:grid-cols-2">
         {systemTypes.map((t) => (
           <li key={t.name} className="rounded-card bg-cream p-4">
             <p className="font-display font-bold text-ink">{t.name}</p>

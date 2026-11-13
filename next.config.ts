@@ -23,6 +23,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/solar-panel-installation", destination: "/locations", statusCode: 301 },
+      // Renamed blog post
+      { source: "/blog/on-grid-vs-off-grid-vs-hybrid-solar", destination: "/blog/on-grid-vs-hybrid-solar", statusCode: 301 },
       ...serviceRedirects.map(([source, destination]) => ({ source, destination, statusCode: 301 as const })),
       ...ncrCities.map((c) => ({ source: `/solar-panel-installation/${c}`, destination: "/solar-panel-installation/delhi-ncr", statusCode: 301 as const })),
       ...removedCities.map((c) => ({ source: `/solar-panel-installation/${c}`, destination: "/locations", statusCode: 301 as const })),

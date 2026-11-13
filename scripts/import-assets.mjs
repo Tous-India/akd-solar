@@ -35,7 +35,7 @@ for (const p of projects) {
     dims[src] = await save(path.join(IN, "projects", `${id}.jpg`), path.join(OUT, "projects", `${id}.jpg`), { keepTop: KEEP_TOP[id] ?? 1 });
   }
 }
-for (const f of ["offgrid-villages-collage", "ongrid-works-collage"]) {
+for (const f of ["ongrid-works-collage"]) {
   dims[`/images/projects/${f}.jpg`] = await save(path.join(IN, "projects", `${f}.jpg`), path.join(OUT, "projects", `${f}.jpg`));
 }
 for (let n = 1; n <= 6; n++) {
