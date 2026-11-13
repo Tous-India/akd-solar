@@ -50,17 +50,17 @@ export function Countdown({ variant = "inline", tone = "light", className = "" }
         <span className="sr-only" aria-live="off">
           {srText}
         </span>
-        <ol aria-hidden className="grid grid-cols-4 gap-2 sm:gap-3">
+        <ol aria-hidden className="grid grid-cols-4 gap-2">
           {units.map((u) => (
             <li
               key={u.label}
               data-countdown={u.label.toLowerCase()}
-              className={`rounded-card border px-2 py-3 text-center sm:px-4 sm:py-5 ${
+              className={`rounded-card border px-2 py-2 text-center sm:px-3 sm:py-3 ${
                 tone === "dark" ? "border-white/15 bg-white/[0.06] text-cream" : "border-line bg-white text-ink"
               }`}
             >
-              <span className="block font-display text-[clamp(1.75rem,5vw,3rem)] leading-none font-extrabold tabular-nums">{u.value}</span>
-              <span className={`mt-2 block text-xs font-semibold tracking-wide uppercase ${tone === "dark" ? "text-cream/70" : "text-muted"}`}>
+              <span className="block font-display text-[clamp(1.35rem,3.2vw,2rem)] leading-none font-extrabold tabular-nums">{u.value}</span>
+              <span className={`mt-1 block text-[0.65rem] font-semibold tracking-wide uppercase ${tone === "dark" ? "text-cream/70" : "text-muted"}`}>
                 {u.label}
               </span>
             </li>

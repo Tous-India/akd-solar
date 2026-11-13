@@ -77,11 +77,12 @@ export default function PmSuryaGharPage() {
       />
 
       <Container>
-        <Reveal as="section" aria-labelledby="countdown-title" className="on-dark rounded-card bg-navy p-5 text-cream sm:p-8">
-          <h2 id="countdown-title" className="text-center font-display text-sm font-bold tracking-[0.16em] text-gold uppercase">
-            Time left to apply
+        <Reveal as="section" aria-labelledby="countdown-title" className="on-dark mx-auto flex max-w-3xl flex-col items-center gap-3 rounded-card bg-navy px-4 py-4 text-cream sm:flex-row sm:justify-between sm:gap-6 sm:px-6">
+          <h2 id="countdown-title" className="shrink-0 text-center font-display text-xs font-bold tracking-[0.16em] text-gold uppercase sm:text-left">
+            Time left
+            <br className="hidden sm:block" /> to apply
           </h2>
-          <Countdown variant="big" tone="dark" className="mx-auto mt-5 max-w-2xl" />
+          <Countdown variant="big" tone="dark" className="w-full max-w-md" />
         </Reveal>
 
         {/* Central subsidy cards */}
