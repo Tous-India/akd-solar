@@ -7,7 +7,6 @@ import { AboutIntro } from "@/components/home/AboutIntro";
 import { PmTeaser } from "@/components/home/PmTeaser";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { RecentProjects } from "@/components/home/RecentProjects";
-import { BrandsRow } from "@/components/home/BrandsRow";
 import { CtaBand } from "@/components/home/CtaBand";
 import { SolutionCards } from "@/components/solutions/SolutionCards";
 import { pageMeta } from "@/lib/seo";
@@ -43,7 +42,6 @@ export default function HomePage() {
       <PmTeaser />
       <HowItWorks />
       <RecentProjects />
-      <BrandsRow />
       <CtaBand />
     </>
   );
