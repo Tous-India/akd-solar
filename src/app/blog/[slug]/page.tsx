@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
@@ -8,7 +9,7 @@ import { QuickAnswer } from "@/components/ui/QuickAnswer";
 import { FaqList } from "@/components/home/Faq";
 import { CtaBand } from "@/components/home/CtaBand";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { formatDate, getPost, posts, readingMinutes, type Block } from "@/lib/blog";
+import { formatDate, getPost, ON_GRID_GUIDE, posts, readingMinutes, type Block } from "@/lib/blog";
 import { articleSchema, faqSchema } from "@/lib/schema";
 import { pageMeta } from "@/lib/seo";
 
@@ -61,6 +62,15 @@ function renderBlock(b: Block, i: number) {
           <Icon name="sparkle" className="mt-1 size-4 shrink-0 text-sun-deep" />
           <span>{b.text}</span>
         </p>
+      );
+    case "img":
+      return (
+        <figure key={i} className="not-prose">
+          <a href={b.src} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-card border border-line bg-white" aria-label={`${b.alt} (opens full size)`}>
+            <Image src={b.src} alt={b.alt} width={b.width} height={b.height} sizes="(min-width: 1024px) 768px, 100vw" className="h-auto w-full" />
+          </a>
+          {b.caption ? <figcaption className="mt-2 text-sm text-muted">{b.caption} Tap to view full size.</figcaption> : null}
+        </figure>
       );
     case "table":
       return (
@@ -155,7 +165,7 @@ export default async function BlogPost({ params }: Props) {
                 Related
               </h2>
               <ul className="mt-4 space-y-1">
-                {post.related.map((r) => (
+                {(post.slug === ON_GRID_GUIDE.slug ? post.related : [{ label: ON_GRID_GUIDE.label, href: ON_GRID_GUIDE.href }, ...post.related]).map((r) => (
                   <li key={r.href}>
                     <Link href={r.href} className="group flex min-h-11 items-center justify-between gap-3 font-medium text-panel">
                       {r.label}

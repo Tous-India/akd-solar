@@ -4,6 +4,7 @@ import { DM_Sans, Sora } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { GuideBand } from "@/components/layout/GuideBand";
 import { FloatingActions } from "@/components/layout/FloatingActions";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
@@ -92,6 +93,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main id="main" tabIndex={-1} className="outline-none">
           {children}
         </main>
+        <GuideBand />
         <Footer />
         <FloatingActions />
         <SmoothScroll />

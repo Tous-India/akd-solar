@@ -13,6 +13,7 @@ const company = [
   { label: "Projects", href: "/projects" },
   { label: "Calculator", href: "/calculator" },
   { label: "Blog", href: "/blog" },
+  { label: "How solar works", href: "/blog/how-on-grid-rooftop-solar-works" },
   { label: "Contact", href: "/contact" },
 ];
 

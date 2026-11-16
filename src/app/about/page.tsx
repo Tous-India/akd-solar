@@ -66,6 +66,36 @@ export default function AboutPage() {
           <p className="text-sm font-bold tracking-[0.16em] text-sun-deep uppercase">Our vision</p>
           <blockquote className="mx-auto mt-3 max-w-3xl font-display text-[clamp(1.25rem,1rem+1vw,1.75rem)] leading-snug font-bold text-ink">“{vision}”</blockquote>
         </Reveal>
+
+        {/* Havells partnership */}
+        <Reveal as="section" aria-labelledby="partner-title" className="mb-14 grid items-center gap-8 overflow-hidden rounded-card border border-line bg-white p-6 sm:p-8 lg:grid-cols-[1fr_1fr] lg:gap-12">
+          <div>
+            <p className="text-sm font-bold tracking-[0.16em] text-sun-deep uppercase">Business partners since {site.havellsDealerSince}</p>
+            <h2 id="partner-title" className="mt-2 text-h2 font-bold text-ink">
+              Authorised Havells dealer
+            </h2>
+            <p className="mt-3 text-muted">
+              Since {site.havellsDealerSince}, AKD Solar has been an authorised dealer of Havells India Ltd. Our plants use Havells inverters, DCDBs and
+              ACDBs backed by the brand&apos;s warranty and service network — and our own team stays with you after installation.
+            </p>
+            <ul className="mt-5 grid gap-2 text-ink/85 sm:grid-cols-2">
+              {[`${site.numbers.years} years in solar`, `${site.numbers.installations} on-grid installations`, `${site.numbers.customers} solar customers`, "Together Everyone Achieves More"].map((t) => (
+                <li key={t} className="flex items-start gap-2">
+                  <Icon name="check" className="mt-1 size-4 shrink-0 text-leaf" />
+                  {t}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <Image
+            src="/images/about/havells-partner-2018.jpg"
+            alt="AKD Solar and Havells — business partners since 2018"
+            width={1400}
+            height={955}
+            sizes="(min-width: 1024px) 560px, 90vw"
+            className="h-auto w-full rounded-card border border-line"
+          />
+        </Reveal>
       </Container>
 
       <NumbersStrip />

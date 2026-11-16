@@ -7,7 +7,8 @@ export type Block =
   | { type: "ul"; items: string[] }
   | { type: "ol"; items: string[] }
   | { type: "table"; caption: string; head: string[]; rows: string[][] }
-  | { type: "note"; text: string };
+  | { type: "note"; text: string }
+  | { type: "img"; src: string; alt: string; width: number; height: number; caption?: string };
 
 export type Post = {
   slug: string;
@@ -30,7 +31,88 @@ export type Post = {
 
 const team = { name: "AKD Solar Engineering Team", role: "Solar design & installation" };
 
+/** Evergreen explainer linked from every page (site-wide band above the footer, footer link, blog sidebars). */
+export const ON_GRID_GUIDE = {
+  slug: "how-on-grid-rooftop-solar-works",
+  href: "/blog/how-on-grid-rooftop-solar-works",
+  label: "How an on-grid rooftop solar system works",
+};
+
 export const posts: Post[] = [
+  {
+    slug: ON_GRID_GUIDE.slug,
+    title: "How an on-grid rooftop solar system works",
+    metaTitle: "How On-Grid Rooftop Solar Works",
+    description:
+      "Every part of an on-grid rooftop solar plant explained — panels, DCDB, inverter, ACDB, solar meter, net meter and earthing — and how net metering cuts your bill.",
+    excerpt: "From the panel on your roof to the net meter on your wall: what each part does and how your bill goes down.",
+    date: "2026-11-16",
+    author: team,
+    category: "Guide",
+    quickAnswer: {
+      q: "How does an on-grid solar system work?",
+      a: "Panels make DC power, the inverter turns it into AC for your home, and anything you don't use flows to the grid through a net meter. At night you draw power from the grid, and you pay only for the difference between what you import and export.",
+    },
+    blocks: [
+      { type: "p", text: "An on-grid (grid-connected) rooftop solar plant works together with your electricity connection. It has no battery bank: the grid acts as your storage. This is the system most homes and businesses in Haryana install under PM Surya Ghar, and it is the type AKD Solar designs and installs every day." },
+      {
+        type: "img",
+        src: "/images/blog/on-grid-system-diagram.png",
+        alt: "Diagram of a grid-connected rooftop solar PV plant without battery: solar panels, GI structure, lightning arrestor, DCDB, Havells on-grid inverter, ACDB, solar meter, consumer distribution panel, load, net meter, grid export to UHBVN, earthing and monitoring app",
+        width: 962,
+        height: 722,
+        caption: "A grid-connected rooftop solar PV plant (without battery bank), as AKD Solar installs it.",
+      },
+      { type: "h2", text: "The parts of an on-grid system" },
+      { type: "h3", text: "1. Solar PV modules" },
+      { type: "p", text: "The panels on your roof turn sunlight into DC (direct current) electricity. We use ALMM-listed panels from TATA, Havells, Waaree and Vikram, sized to your monthly units." },
+      { type: "h3", text: "2. Solar GI structure" },
+      { type: "p", text: "Galvanised-iron mounting holds the panels at the right tilt and direction, and is built to handle wind load for 25 years. Raised structures keep the roof usable underneath." },
+      { type: "h3", text: "3. Lightning arrestor" },
+      { type: "p", text: "A lightning arrestor on the highest point of the plant safely carries lightning strikes to the ground through its own earth pit." },
+      { type: "h3", text: "4. DCDB (DC distribution box)" },
+      { type: "p", text: "The DC cables from the panels come into the DCDB first. It has fuses, a surge protection device and an isolator switch, so the DC side can be safely disconnected for service." },
+      { type: "h3", text: "5. On-grid solar inverter" },
+      { type: "p", text: "The inverter is the heart of the plant. It converts DC from the panels into AC (alternating current) that matches the grid's voltage and frequency. For safety it switches off automatically during a power cut (anti-islanding), so line workers are never at risk." },
+      { type: "h3", text: "6. ACDB (AC distribution box)" },
+      { type: "p", text: "The inverter's AC output passes through the ACDB, which has an MCB and surge protection before power reaches your building's wiring." },
+      { type: "h3", text: "7. Solar meter" },
+      { type: "p", text: "A separate solar (generation) meter records exactly how many units your panels produce — useful to track performance and for subsidy paperwork." },
+      { type: "h3", text: "8. Consumer distribution panel and load" },
+      { type: "p", text: "Solar power goes into your main distribution panel and runs your lights, fans, AC, pumps and machines first. Your home always uses its own solar power before anything else." },
+      { type: "h3", text: "9. Net meter" },
+      { type: "p", text: "The DISCOM (UHBVN or DHBVN in Haryana, BSES or Tata Power-DDL in Delhi) replaces your old meter with a bi-directional net meter. It counts units you import from the grid and units you export to it." },
+      { type: "h3", text: "10. Earthing — safety first" },
+      { type: "p", text: "Separate earth pits protect the lightning arrestor, the DC side and the AC side. Good earthing protects people and equipment, and is one of the first things the DISCOM checks during inspection." },
+      { type: "h3", text: "11. Monitoring platform" },
+      { type: "p", text: "The inverter sends live data to an app on your phone, so you can see daily, monthly and yearly generation. AKD Solar includes free real-time monitoring for 25 years." },
+      { type: "h2", text: "How net metering cuts your bill" },
+      {
+        type: "ol",
+        items: [
+          "Daytime: your panels power the building first.",
+          "Extra power flows out through the net meter to the grid (export).",
+          "Evening and night: you draw power from the grid as usual (import).",
+          "Your bill is for imported units minus exported units. If you export more than you import, the extra is carried forward as per DISCOM rules.",
+        ],
+      },
+      { type: "note", text: "Rule of thumb: 1 kW of solar makes about 4 units a day, or roughly 120 units a month. Divide your monthly units by 120 to estimate the system size you need." },
+      { type: "h2", text: "On-grid or hybrid?" },
+      { type: "p", text: "On-grid is the simplest and best value when your power supply is reliable: no battery to replace, and it qualifies for PM Surya Ghar subsidy. If you face long power cuts, a hybrid system adds a battery for backup. Our engineers will recommend the right option after the free site visit." },
+    ],
+    faqs: [
+      { q: "Will an on-grid system work during a power cut?", a: "No. The inverter shuts down when the grid is off, for the safety of line workers. If you need backup, ask us about a hybrid system." },
+      { q: "Do I need a battery with an on-grid system?", a: "No. The grid works as your storage through net metering, which keeps the cost and maintenance low." },
+      { q: "Who installs the net meter?", a: "Your DISCOM installs it after inspection. AKD Solar files the application and follows up with UHBVN, DHBVN, BSES or Tata Power-DDL for you." },
+      { q: "How much maintenance does it need?", a: "Mostly cleaning the panels every 2–3 weeks and an annual health check. Our AMC covers scheduled cleaning and checks." },
+    ],
+    related: [
+      { label: "Net-metering with UHBVN and DHBVN", href: "/blog/net-metering-process-uhbvn-dhbvn" },
+      { label: "Residential rooftop solar", href: "/solar-solutions/residential-rooftop" },
+      { label: "PM Surya Ghar Yojana", href: "/pm-surya-ghar-yojana" },
+      { label: "Solar calculator", href: "/calculator" },
+    ],
+  },
   {
     slug: "pm-surya-ghar-subsidy-haryana",
     title: "PM Surya Ghar subsidy in Haryana, explained",
@@ -347,6 +429,7 @@ export function readingMinutes(post: Post) {
     .map((b) => {
       if (b.type === "ul" || b.type === "ol") return b.items.join(" ");
       if (b.type === "table") return [...b.head, ...b.rows.flat()].join(" ");
+      if (b.type === "img") return b.caption ?? "";
       return b.text;
     })
     .join(" ");
