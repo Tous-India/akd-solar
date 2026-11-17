@@ -437,6 +437,14 @@ export const taglines: { text: string; author: string }[] = [
     text: "I'd put my money on the sun and solar energy. What a source of power! I hope we don't have to wait until oil and coal run out before we tackle that.",
     author: "Thomas Edison",
   },
+  {
+    text: "Don't find customers for your product. Find products for your customers. Don't attract customers into buying your products. You become closer to your customers by finding solutions for their needs.",
+    author: "Seth Godin",
+  },
+  {
+    text: "We set your panels at the accurate angle for solar radiation, in a professional manner, without changing the elevation of your existing building.",
+    author: "AKD Solar",
+  },
 ];
 
 /** "How We Work" (from the company deck) */
