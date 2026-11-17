@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { BannerSlider } from "@/components/home/BannerSlider";
 import { Taglines } from "@/components/home/Taglines";
+import { TrustMarquee } from "@/components/home/TrustMarquee";
 import { AboutIntro } from "@/components/home/AboutIntro";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { RecentProjects } from "@/components/home/RecentProjects";
@@ -26,6 +27,7 @@ export default function HomePage() {
       <div className="pt-[68px] xl:pt-[76px]">
         <BannerSlider />
       </div>
+      <TrustMarquee />
       <Taglines />
       <AboutIntro />
 
