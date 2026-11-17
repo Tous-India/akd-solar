@@ -87,7 +87,7 @@ export default function AboutPage() {
             </ul>
           </div>
           <Image
-            src="/images/about/havells-partner-2018.jpg"
+            src="/images/about/havells-partner-2018-v2.jpg"
             alt="AKD Solar and Havells — business partners since 2018"
             width={1400}
             height={975}
@@ -129,14 +129,14 @@ export default function AboutPage() {
           <Reveal as="ul" stagger={0.08} className="mt-6 grid gap-5 md:grid-cols-2">
             {site.offices.map((o) => (
               <li key={o.label} className="flex flex-col overflow-hidden rounded-card border border-line bg-white">
-                <div className="relative aspect-[4/3] overflow-hidden bg-sand">
+                <div className="relative aspect-[16/10] overflow-hidden bg-sand">
                   <Image
                     src={o.photo}
                     alt={`${site.name} ${o.label.toLowerCase()} — ${formatOffice(o)}`}
                     width={o.photoSize.width}
                     height={o.photoSize.height}
                     sizes="(min-width: 768px) 50vw, 100vw"
-                    className="h-full w-full object-cover object-top"
+                    className="h-full w-full object-cover object-[center_20%]"
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-5 sm:p-6">
