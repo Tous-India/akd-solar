@@ -11,7 +11,7 @@ import { InlineCta } from "@/components/solutions/Blocks";
 import { certificates, vision } from "@/lib/data";
 import { imageDims } from "@/lib/projects.generated";
 import { pageMeta } from "@/lib/seo";
-import { site } from "@/lib/site";
+import { formatOffice, site } from "@/lib/site";
 
 export const metadata: Metadata = pageMeta({
   title: "About AKD Solar — Since 2017, Sonipat",
@@ -22,14 +22,13 @@ export const metadata: Metadata = pageMeta({
 const dim = (src: string) => imageDims[src] ?? { width: 1200, height: 900 };
 const withDims = (src: string, caption: string) => ({ src, caption, ...dim(src) });
 
-const office = withDims("/images/about/office-sonipat-sector14.jpg", "Head office — Shop No. 46, Main Market, Sector 14, Sonipat");
 
 export default function AboutPage() {
   const doctorate = withDims("/images/about/honorary-doctorate.jpg", `Honorary Doctorate in Technology awarded to ${site.founder.name} (2026)`);
   return (
     <>
       <PageHeader
-        breadcrumb={[{ name: "About", path: "/about" }]}
+        breadcrumb={[{ name: "About Us", path: "/about" }]}
         eyebrow="About us"
         title="About AKD Solar"
         intro={`Solar EPC and O&M from Sonipat since ${site.foundedYear}. Authorised Havells dealer since ${site.havellsDealerSince}.`}
@@ -64,7 +63,7 @@ export default function AboutPage() {
         {/* Vision */}
         <Reveal as="section" aria-label="Our vision" className="my-14 text-center">
           <p className="text-sm font-bold tracking-[0.16em] text-sun-deep uppercase">Our vision</p>
-          <blockquote className="mx-auto mt-3 max-w-3xl font-display text-[clamp(1.25rem,1rem+1vw,1.75rem)] leading-snug font-bold text-ink">“{vision}”</blockquote>
+          <blockquote className="mx-auto mt-3 max-w-3xl font-display text-[clamp(1.25rem,1rem+1vw,1.75rem)] leading-snug font-bold text-ink">“{vision.replace(" — Balancing the Nature.", " — ")}<span className="text-[#2E8B1E]">Balancing the Nature.</span>”</blockquote>
         </Reveal>
 
         {/* Havells partnership */}
@@ -91,7 +90,7 @@ export default function AboutPage() {
             src="/images/about/havells-partner-2018.jpg"
             alt="AKD Solar and Havells — business partners since 2018"
             width={1400}
-            height={955}
+            height={975}
             sizes="(min-width: 1024px) 560px, 90vw"
             className="h-auto w-full rounded-card border border-line"
           />
@@ -125,20 +124,36 @@ export default function AboutPage() {
 
         <section aria-labelledby="office-title" className="mt-14">
           <h2 id="office-title" className="text-h2 font-bold text-ink">
-            Our office
+            Our offices
           </h2>
-          <Reveal className="mt-6 max-w-4xl">
-            <figure className="overflow-hidden rounded-card border border-line bg-white">
-              <Image
-                src={office.src}
-                alt={office.caption}
-                width={office.width}
-                height={office.height}
-                sizes="(min-width: 960px) 896px, 100vw"
-                className="h-auto w-full"
-              />
-              <figcaption className="px-4 py-3 text-sm text-muted">{office.caption}</figcaption>
-            </figure>
+          <Reveal as="ul" stagger={0.08} className="mt-6 grid gap-5 md:grid-cols-2">
+            {site.offices.map((o) => (
+              <li key={o.label} className="flex flex-col overflow-hidden rounded-card border border-line bg-white">
+                <div className="relative aspect-[4/3] overflow-hidden bg-sand">
+                  <Image
+                    src={o.photo}
+                    alt={`${site.name} ${o.label.toLowerCase()} — ${formatOffice(o)}`}
+                    width={o.photoSize.width}
+                    height={o.photoSize.height}
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    className="h-full w-full object-cover object-top"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-5 sm:p-6">
+                  <p className="text-xs font-bold tracking-[0.14em] text-sun-deep uppercase">{o.since}</p>
+                  <h3 className="mt-1 font-display text-h3 font-bold text-ink">{o.label}</h3>
+                  <address className="mt-2 text-ink/85 not-italic">{formatOffice(o)}</address>
+                  <a
+                    href={o.mapsLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-auto inline-flex min-h-11 items-center gap-1.5 pt-3 text-sm font-semibold text-panel"
+                  >
+                    <Icon name="mapPin" className="size-4" /> View on Google Maps <Icon name="arrowUpRight" className="size-4" />
+                  </a>
+                </div>
+              </li>
+            ))}
           </Reveal>
         </section>
 

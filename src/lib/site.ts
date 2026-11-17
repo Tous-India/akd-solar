@@ -16,12 +16,12 @@ export const site = {
   havellsDealerSince: 2018,
 
   /** Display format; tel: links are generated from it. The first number is also the WhatsApp number. */
-  phones: ["+91 82228 60046", "+91 82228 70046"],
-  phone: "+91 82228 60046",
+  phones: ["+91 93154 10343"],
+  phone: "+91 93154 10343",
   /** Country code + number, digits only (used by wa.me) */
-  whatsapp: "918222860046",
+  whatsapp: "919315410343",
   whatsappMessage: "Hello AKD Solar! I'd like a free solar site visit.",
-  email: "akdsolar@gmail.com",
+  email: "akdsolarpower@gmail.com",
 
   offices: [
     {
@@ -32,6 +32,10 @@ export const site = {
       state: "Haryana",
       pincode: "131001",
       mapsQuery: "Shop No. 46, Main Market, Sector 14, Sonipat, Haryana 131001",
+      mapsLink: "https://maps.app.goo.gl/CJQHzYstPd1E9vi9A",
+      photo: "/images/about/office-head-sector14.jpg",
+      photoSize: { width: 378, height: 582 },
+      since: "Started in 2017",
     },
     {
       label: "Branch office",
@@ -41,6 +45,10 @@ export const site = {
       state: "Haryana",
       pincode: "",
       mapsQuery: "Garh Shahjahanpur Bypass, Sector 10, Sonipat, Haryana",
+      mapsLink: "https://maps.app.goo.gl/T2QJ5VCkeKb3TyDh6",
+      photo: "/images/about/office-branch-sector10.jpg",
+      photoSize: { width: 1064, height: 640 },
+      since: "Opened in 2025",
     },
   ],
   /** Head office (used by schema, footer and city pages) */
@@ -117,7 +125,7 @@ export type NavItem = { label: string; href: string; menu?: "solutions" | "locat
 
 export const nav: NavItem[] = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
+  { label: "About Us", href: "/about" },
   { label: "Solar Solutions", href: "/solar-solutions", menu: "solutions" },
   { label: "PM Surya Ghar Yojana", href: "/pm-surya-ghar-yojana", highlight: true },
   { label: "Projects", href: "/projects" },

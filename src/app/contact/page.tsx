@@ -4,7 +4,7 @@ import { Icon } from "@/components/ui/Icon";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/motion/Reveal";
 import { ContactForm } from "@/components/contact/ContactForm";
-import { formatOffice, mailHref, mapsUrl, site, telHref } from "@/lib/site";
+import { formatOffice, mailHref, site, telHref } from "@/lib/site";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
@@ -54,7 +54,7 @@ export default function ContactPage() {
                   </h2>
                   <address className="mt-2 text-ink/85 not-italic">{formatOffice(o)}</address>
                   <a
-                    href={mapsUrl(o.mapsQuery)}
+                    href={o.mapsLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-2 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-panel"

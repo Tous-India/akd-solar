@@ -6,11 +6,11 @@ import { projects, solutions } from "@/lib/data";
 
 const dims = (src: string) => projects.flatMap((p) => p.images).find((i) => i.src === src) ?? { width: 1280, height: 960 };
 
-/** The three solar solutions as photo cards (home + /solar-solutions) */
+/** The four solar solutions as photo cards (home + /solar-solutions) */
 export function SolutionCards({ headingLevel = "h3" }: { headingLevel?: "h2" | "h3" }) {
   const Heading = headingLevel;
   return (
-    <Reveal as="ul" stagger={0.08} className="grid gap-5 md:grid-cols-3">
+    <Reveal as="ul" stagger={0.08} className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
       {solutions.map((s) => {
         const d = s.imageSize ?? dims(s.image);
         return (
@@ -25,7 +25,7 @@ export function SolutionCards({ headingLevel = "h3" }: { headingLevel?: "h2" | "
                   alt={s.imageAlt ?? `${s.title} solar installation by AKD Solar`}
                   width={d.width}
                   height={d.height}
-                  sizes="(min-width: 768px) 33vw, 100vw"
+                  sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
                   className="h-full w-full object-cover object-center transition-transform duration-700 ease-out-expo group-hover:scale-[1.04]"
                 />
               </div>

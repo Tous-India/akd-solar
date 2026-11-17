@@ -14,7 +14,7 @@ export const metadata: Metadata = pageMeta({
 export default function SolarSolutionsPage() {
   return (
     <>
-      <PageHeader breadcrumb={[{ name: "Solar Solutions", path: "/solar-solutions" }]} eyebrow="What we install" title="Solar solutions" intro="Pick the setup that fits your roof and bill." />
+      <PageHeader breadcrumb={[{ name: "Solar Solutions", path: "/solar-solutions" }]} eyebrow="Where can we install solar?" title="Solar solutions" intro="Homes, group housing societies, commercial buildings and factories." />
       <section aria-label="Solutions" className="pb-4">
         <Container>
           <SolutionCards headingLevel="h2" />

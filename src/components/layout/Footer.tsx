@@ -8,7 +8,7 @@ import { menuLinks } from "./menuLinks";
 import { NewsletterForm } from "./NewsletterForm";
 
 const company = [
-  { label: "About", href: "/about" },
+  { label: "About Us", href: "/about" },
   { label: "PM Surya Ghar Yojana", href: "/pm-surya-ghar-yojana" },
   { label: "Projects", href: "/projects" },
   { label: "Calculator", href: "/calculator" },

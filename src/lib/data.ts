@@ -103,69 +103,9 @@ export const solutions: Solution[] = [
     metaDescription: "Home rooftop solar in Sonipat, Haryana and Delhi NCR with up to ₹78,000 PM Surya Ghar subsidy, net metering and installation in as little as 3 days.",
   },
   {
-    slug: "commercial-and-individual",
-    title: "Commercial & Individual",
-    heading: "Commercial & individual solar",
-    short: "Lower daytime power costs for shops, offices and factories.",
-    intro: "Rooftop solar for shops, offices, factories, schools, hospitals and apartment buildings. Lower daytime power costs with a fast payback.",
-    icon: "factory",
-    image: "/images/solutions/commercial-apartments.jpg",
-    imageAlt: "Apartment and commercial buildings with rooftop solar panels — AKD Solar",
-    imageSize: { width: 636, height: 420 },
-    whatYouGet: [
-      "Load study from your last 12 bills",
-      "On-grid plants with net metering up to 500 kW",
-      "Industrial-grade structures and earthing",
-      "Remote generation monitoring",
-      `Industrial solar loans at ${site.loans.industrial.rate}`,
-      "Free app monitoring for 25 years",
-    ],
-    blocks: [
-      {
-        title: "What you get",
-        intro: "Solar for shops, offices, factories, schools and apartment buildings. Daytime power is your biggest bill, and that is exactly when panels produce.",
-        bullets: [],
-        specs: [
-          { label: "Typical size", value: "10–500 kW" },
-          { label: "Net metering", value: "Up to 500 kW" },
-          { label: "Loans", value: site.loans.industrial.rate },
-        ],
-        image: "/images/solutions/commercial-apartments.jpg",
-        imageAlt: "Apartment and commercial buildings with rooftop solar panels — AKD Solar",
-        imageMaxWidth: 636,
-      },
-      {
-        title: "Buildings and individual sites",
-        intro: "Offices, showrooms, schools, hospitals, apartment blocks and independent buildings. Each system is sized to your sanctioned load and roof.",
-        bullets: [
-          "Rooftop systems sized to your sanctioned load",
-          "Elevated structures for shaded or crowded rooftops",
-          "Havells, TATA, Waaree and Vikram panels",
-          "Help with Haryana MSME capital subsidy paperwork",
-        ],
-        specs: [
-          { label: "Systems", value: "On-grid & hybrid" },
-          { label: "MSME subsidy", value: "Up to 30%" },
-          { label: "Monitoring", value: "25 years free" },
-        ],
-        image: "/images/solutions/commercial-1.jpg",
-        imageAlt: "Rooftop solar on commercial and apartment buildings — AKD Solar",
-      },
-    ],
-    loans: ["industrial"],
-    pumps: false,
-    msme: true,
-    faqs: [
-      { q: "Can a factory get a subsidy?", a: "Haryana MSMEs can get a 30% capital subsidy, up to ₹35 lakh in Sub-prime and Prime focus areas or ₹25 lakh in Core and Intermediate areas, subject to current policy." },
-      { q: "How big can a commercial plant be?", a: "Net metering is available up to 500 kW. Each kW needs about 80–100 sq ft of shadow-free roof." },
-    ],
-    metaTitle: "Commercial & Industrial Solar in Haryana",
-    metaDescription: "Solar for shops, offices, factories and apartment buildings in Haryana: net metering up to 500 kW, MSME capital subsidy support and industrial loans at 8.50–9.25%.",
-  },
-  {
     slug: "housing-societies",
-    title: "Housing Societies",
-    heading: "Housing society solar",
+    title: "Group Housing Societies",
+    heading: "Group housing society solar",
     short: "Power common areas and cut maintenance bills.",
     intro: "Solar for lifts, pumps, lighting and EV charging in common areas. PM Surya Ghar support is available for RWAs and group housing societies.",
     icon: "users",
@@ -218,6 +158,124 @@ export const solutions: Solution[] = [
     ],
     metaTitle: "Housing Society Solar in Sonipat & NCR",
     metaDescription: "Solar for RWAs and group housing societies: lifts, pumps, lighting and EV charging, with PM Surya Ghar support of ₹18,000 per kW for common facilities.",
+  },
+  {
+    slug: "commercial-and-individual",
+    title: "Commercial",
+    heading: "Commercial rooftop solar",
+    short: "Lower daytime power costs for shops, offices and showrooms.",
+    intro: "Rooftop solar for shops, offices, showrooms, schools, hospitals and commercial buildings. Lower daytime power costs with a fast payback.",
+    icon: "factory",
+    image: "/images/solutions/commercial-apartments.jpg",
+    imageAlt: "Apartment and commercial buildings with rooftop solar panels — AKD Solar",
+    imageSize: { width: 636, height: 420 },
+    whatYouGet: [
+      "Load study from your last 12 bills",
+      "On-grid plants with net metering up to 500 kW",
+      "Industrial-grade structures and earthing",
+      "Remote generation monitoring",
+      `Industrial solar loans at ${site.loans.industrial.rate}`,
+      "Free app monitoring for 25 years",
+    ],
+    blocks: [
+      {
+        title: "What you get",
+        intro: "Solar for shops, offices, showrooms, schools and commercial buildings. Daytime power is your biggest bill, and that is exactly when panels produce.",
+        bullets: [],
+        specs: [
+          { label: "Typical size", value: "10–500 kW" },
+          { label: "Net metering", value: "Up to 500 kW" },
+          { label: "Loans", value: site.loans.industrial.rate },
+        ],
+        image: "/images/solutions/commercial-apartments.jpg",
+        imageAlt: "Apartment and commercial buildings with rooftop solar panels — AKD Solar",
+        imageMaxWidth: 636,
+      },
+      {
+        title: "Buildings and individual sites",
+        intro: "Offices, showrooms, schools, hospitals, apartment blocks and independent buildings. Each system is sized to your sanctioned load and roof.",
+        bullets: [
+          "Rooftop systems sized to your sanctioned load",
+          "Elevated structures for shaded or crowded rooftops",
+          "Havells, TATA, Waaree and Vikram panels",
+          "AMC with scheduled cleaning and health checks",
+        ],
+        specs: [
+          { label: "Systems", value: "On-grid & hybrid" },
+          { label: "Payback", value: "~4–5 years" },
+          { label: "Monitoring", value: "25 years free" },
+        ],
+        image: "/images/solutions/commercial-1.jpg",
+        imageAlt: "Rooftop solar on commercial and apartment buildings — AKD Solar",
+      },
+    ],
+    loans: ["industrial"],
+    pumps: false,
+    msme: false,
+    faqs: [
+      { q: "Is there a subsidy for commercial buildings?", a: "PM Surya Ghar is for homes only, but commercial rooftop solar pays back fast through lower daytime bills, usually in about 4–5 years." },
+      { q: "How big can a commercial plant be?", a: "Net metering is available up to 500 kW. Each kW needs about 80–100 sq ft of shadow-free roof." },
+    ],
+    metaTitle: "Commercial Rooftop Solar in Haryana",
+    metaDescription: "Rooftop solar for shops, offices, showrooms, schools and hospitals in Haryana and Delhi NCR: net metering up to 500 kW and commercial solar loans at 8.50–9.25%.",
+  },
+  {
+    slug: "industrial",
+    title: "Industrial",
+    heading: "Industrial rooftop solar",
+    short: "Cut factory power bills with MSME subsidy support.",
+    intro: "Rooftop solar on factory sheds and industrial buildings. Daytime production loads match solar output, so savings start from day one.",
+    icon: "factory",
+    image: "/images/projects/p01-1.jpg",
+    imageAlt: "Industrial shed rooftop solar plant installed by AKD Solar",
+    whatYouGet: [
+      "Load study from your last 12 bills",
+      "On-grid plants with net metering up to 500 kW",
+      "Industrial-grade structures and earthing",
+      "Help with Haryana MSME capital subsidy paperwork",
+      `Industrial solar loans at ${site.loans.industrial.rate}`,
+      "Free app monitoring for 25 years",
+    ],
+    blocks: [
+      {
+        title: "What you get",
+        intro: "Solar for factories, workshops, cold stores and warehouses. Your machines run in the daytime, exactly when the panels produce.",
+        bullets: [],
+        specs: [
+          { label: "Typical size", value: "20–500 kW" },
+          { label: "MSME subsidy", value: "Up to 30%" },
+          { label: "Loans", value: site.loans.industrial.rate },
+        ],
+        image: "/images/projects/p01-1.jpg",
+        imageAlt: "Industrial shed rooftop solar plant installed by AKD Solar",
+      },
+      {
+        title: "Built for factory roofs",
+        intro: "Tin sheds, RCC roofs and large open terraces. We design around your shifts, sanctioned load and roof strength.",
+        bullets: [
+          "Structures designed for metal sheds and RCC roofs",
+          "Installation planned around production shifts",
+          "Havells, TATA, Waaree and Vikram panels",
+          "AMC with scheduled cleaning and health checks",
+        ],
+        specs: [
+          { label: "Net metering", value: "Up to 500 kW" },
+          { label: "Payback", value: "~3–4 years" },
+          { label: "Monitoring", value: "25 years free" },
+        ],
+        image: "/images/projects/p02-1.jpg",
+        imageAlt: "Solar panels on an industrial shed roof, installed by AKD Solar",
+      },
+    ],
+    loans: ["industrial"],
+    pumps: false,
+    msme: true,
+    faqs: [
+      { q: "Can a factory get a subsidy?", a: "Haryana MSMEs can get a 30% capital subsidy, up to ₹35 lakh in Sub-prime and Prime focus areas or ₹25 lakh in Core and Intermediate areas, subject to current policy." },
+      { q: "Can solar run on a tin shed roof?", a: "Yes. We use structures designed for metal sheds and check roof strength before installation." },
+    ],
+    metaTitle: "Industrial Rooftop Solar in Haryana",
+    metaDescription: "Rooftop solar for factories and industrial sheds in Haryana: net metering up to 500 kW, Haryana MSME 30% capital subsidy support and industrial loans at 8.50–9.25%.",
   },
 ];
 
@@ -350,7 +408,6 @@ export const pmEligibility = [
   "Indian citizen",
   "Owns a house with a roof suitable for solar panels",
   "Valid electricity connection in your own name",
-  "Has not taken any other subsidy for rooftop solar",
 ];
 
 export const pmDocuments = [
@@ -359,21 +416,28 @@ export const pmDocuments = [
   "Bank passbook or cancelled cheque",
   "Proof of house ownership",
   "Passport-size photo",
-  "Income certificate (only for the Haryana top-up)",
 ];
 
 export const pmFaqs: FAQ[] = [
   { q: "How much subsidy can I get?", a: "₹30,000 per kW for the first 2 kW and ₹18,000 for the 3rd kW. The central subsidy is capped at ₹78,000 for 3 kW and above." },
   { q: "When does the scheme close?", a: "Applications are open until 31 March 2027." },
   { q: "Is there extra subsidy in Haryana?", a: "Haryana announced an extra ₹50,000 for families earning up to ₹1.8 lakh a year and ₹20,000 for ₹1.8–3 lakh (June 2024). Confirm current status with DHBVN or UHBVN." },
-  { q: "Who is eligible?", a: "Homeowners with an electricity connection in their name who have not claimed a rooftop solar subsidy before." },
+  { q: "Who is eligible?", a: "Indian citizens who own a house with a suitable roof and have an electricity connection in their own name." },
   { q: "How much free electricity will I get?", a: "The scheme aims to give households up to 300 units of free electricity a month from their own rooftop system. What you save depends on the system size and your usage." },
-  { q: "Which documents do I need?", a: "Your latest electricity bill, Aadhaar card, bank passbook or cancelled cheque, proof of house ownership and a photo. For the Haryana top-up you also need an income certificate." },
+  { q: "Which documents do I need?", a: "Your latest electricity bill, Aadhaar card, bank passbook or cancelled cheque, proof of house ownership and a passport-size photo." },
   { q: "Can I take a loan for the rest of the cost?", a: `Yes. We help arrange residential solar loans at about ${site.loans.residential.rate} through ${site.loans.residential.banks.join(", ")}.` },
   { q: "Who handles the paperwork?", a: "We do. AKD Solar files the portal application, installs the system and follows up with DHBVN or UHBVN for net metering until the subsidy reaches your bank account." },
 ];
 
 // ───────────────────────── Home ─────────────────────────
+
+/** Tag lines shown under the home banner (add more and the strip rotates) */
+export const taglines: { text: string; author: string }[] = [
+  {
+    text: "I'd put my money on the sun and solar energy. What a source of power! I hope we don't have to wait until oil and coal run out before we tackle that.",
+    author: "Thomas Edison",
+  },
+];
 
 /** "How We Work" (from the company deck) */
 export const processSteps: { icon: IconName; title: string; text: string }[] = [

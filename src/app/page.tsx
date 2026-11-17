@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { BannerSlider } from "@/components/home/BannerSlider";
-import { TrustMarquee } from "@/components/home/TrustMarquee";
+import { Taglines } from "@/components/home/Taglines";
 import { AboutIntro } from "@/components/home/AboutIntro";
-import { PmTeaser } from "@/components/home/PmTeaser";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { RecentProjects } from "@/components/home/RecentProjects";
 import { CtaBand } from "@/components/home/CtaBand";
@@ -27,19 +26,18 @@ export default function HomePage() {
       <div className="pt-[68px] xl:pt-[76px]">
         <BannerSlider />
       </div>
-      <TrustMarquee />
+      <Taglines />
       <AboutIntro />
 
       <section aria-labelledby="solutions-title" className="pb-4">
         <Container>
-          <SectionHeading eyebrow="Solar solutions" title={<span id="solutions-title">What we install</span>} />
+          <SectionHeading title={<span id="solutions-title">Where can we install solar?</span>} />
           <div className="mt-8">
             <SolutionCards />
           </div>
         </Container>
       </section>
 
-      <PmTeaser />
       <HowItWorks />
       <RecentProjects />
       <CtaBand />

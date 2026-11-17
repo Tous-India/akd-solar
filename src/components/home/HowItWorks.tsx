@@ -34,9 +34,7 @@ export function HowItWorks() {
     <section ref={ref} aria-labelledby="how-title" className="bg-sand py-16 sm:py-20">
       <Container>
         <SectionHeading
-          eyebrow="How we work"
           title={<span id="how-title">How it works</span>}
-          subtitle="From the first conversation to the final connection."
           align="center"
         />
         <ol data-steps className="relative mt-12 grid gap-8 md:grid-cols-4 md:gap-6">

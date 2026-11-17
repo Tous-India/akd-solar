@@ -10,12 +10,11 @@ import { PmHeroVisual } from "@/components/subsidy/PmHeroVisual";
 import { FaqList } from "@/components/home/Faq";
 import { InlineCta } from "@/components/solutions/Blocks";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { BarChart, Donut, StackedBars } from "@/components/charts/Charts";
+import { BarChart, Donut } from "@/components/charts/Charts";
 import {
   akdSubsidyResults,
   applySteps,
   haryanaTariff,
-  haryanaTopUp,
   installsByYear,
   pmDocuments,
   pmEligibility,
@@ -23,7 +22,6 @@ import {
   pmStatCards,
   pmStats,
   pmStatsAsOn,
-  subsidyBreakdown,
   subsidyTable,
 } from "@/lib/data";
 import { formatINR } from "@/lib/format";
@@ -47,11 +45,6 @@ const portalSource = (
   </>
 );
 
-const [topUpLow, topUpMid] = haryanaTopUp;
-const breakdownRows = subsidyBreakdown.flatMap((s) => [
-  { group: s.size, label: "Income up to ₹1.8 lakh", a: s.central, b: topUpLow.amount },
-  { group: s.size, label: "Income ₹1.8–3 lakh", a: s.central, b: topUpMid.amount },
-]);
 
 function SectionTitle({ id, children, sub }: { id: string; children: React.ReactNode; sub?: React.ReactNode }) {
   return (
@@ -97,22 +90,6 @@ export default function PmSuryaGharPage() {
             ))}
           </Reveal>
           <p className="mt-3 text-sm text-muted">Central subsidy is capped at ₹78,000 for 3 kW and above.</p>
-        </section>
-
-        {/* e) Subsidy breakdown */}
-        <section aria-labelledby="breakdown-title" className="mt-14">
-          <SectionTitle id="breakdown-title" sub="In Haryana, eligible families can add a state top-up to the central subsidy.">
-            Central + Haryana subsidy
-          </SectionTitle>
-          <div className="mt-6">
-            <StackedBars
-              title="Total subsidy by system size and family income"
-              rows={breakdownRows}
-              aName="Central subsidy"
-              bName="Haryana top-up"
-              source="Central subsidy: pmsuryaghar.gov.in. Haryana top-up as announced June 2024 — confirm with DHBVN/UHBVN."
-            />
-          </div>
         </section>
 
         {/* d) Our results */}
