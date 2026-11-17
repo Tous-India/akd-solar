@@ -28,7 +28,6 @@ export default function HomePage() {
         <BannerSlider />
       </div>
       <TrustMarquee />
-      <Taglines />
       <AboutIntro />
 
       <section aria-labelledby="solutions-title" className="pb-4">
@@ -42,6 +41,7 @@ export default function HomePage() {
 
       <HowItWorks />
       <RecentProjects />
+      <Taglines />
       <CtaBand />
     </>
   );
