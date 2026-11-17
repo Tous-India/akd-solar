@@ -74,8 +74,9 @@ export default function AboutPage() {
               Authorised Havells dealer
             </h2>
             <p className="mt-3 text-muted">
-              Since {site.havellsDealerSince}, AKD Solar has been an authorised dealer of Havells India Ltd. Our plants use Havells inverters, DCDBs and
-              ACDBs backed by the brand&apos;s warranty and service network — and our own team stays with you after installation.
+              Planning to lower your electricity bill? We set your solar panels at the accurate angle for solar radiation, in a professional
+              manner, without changing the elevation of your building&apos;s existing structure. Let us set up a meeting so you can see our
+              products — we&apos;re sure you&apos;ll love the system.
             </p>
             <ul className="mt-5 grid gap-2 text-ink/85 sm:grid-cols-2">
               {[`${site.numbers.years} years in solar`, `${site.numbers.installations} on-grid installations`, `${site.numbers.customers} solar customers`, "Together Everyone Achieves More"].map((t) => (
