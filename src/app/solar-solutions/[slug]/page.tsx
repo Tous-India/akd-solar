@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
+import { QuickEnquiry } from "@/components/contact/QuickEnquiry";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { FeatureBlock } from "@/components/solutions/FeatureBlock";
 import { FaqList } from "@/components/home/Faq";
@@ -41,6 +42,7 @@ export default async function SolutionPage({ params }: Props) {
         ]}
         title={s.heading}
         intro={s.short}
+        aside={<QuickEnquiry service={s.title} />}
       />
 
       <Container className="pb-4">

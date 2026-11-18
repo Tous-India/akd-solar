@@ -18,6 +18,8 @@ type Props = {
   children?: ReactNode;
   /** Optional artwork shown under the breadcrumb. When set, eyebrow/h1/intro stay in the DOM for SEO but are visually hidden (the artwork carries them). */
   visual?: ReactNode;
+  /** Optional card shown beside the text on large screens (below it on phones), e.g. a quick enquiry form */
+  aside?: ReactNode;
 };
 
 /**
@@ -28,7 +30,7 @@ type Props = {
  * Text colours are AA on every part of the band, glow included: breadcrumb ink/65 (4.8:1), eyebrow #8F4400 (4.9:1),
  * intro ink/70 (5.6:1), h1 ink (12.5:1).
  */
-export function PageHeader({ breadcrumb, eyebrow, title, intro, children, visual }: Props) {
+export function PageHeader({ breadcrumb, eyebrow, title, intro, children, visual, aside }: Props) {
   return (
     <section className="relative mb-8 overflow-hidden border-b md:mb-12 border-[rgb(16_24_40/0.06)] bg-[linear-gradient(120deg,#FFF3D6_0%,#FFE6BF_35%,#FDF0E2_65%,#E9F5E1_100%)] pt-[96px] pb-6 sm:pt-[108px] sm:pb-8 xl:pt-[116px]">
       <JsonLd data={breadcrumbSchema(breadcrumb)} />
@@ -36,8 +38,8 @@ export function PageHeader({ breadcrumb, eyebrow, title, intro, children, visual
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgb(16_24_40/0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgb(16_24_40/0.06)_1px,transparent_1px)] bg-[size:64px_44px] [mask-image:linear-gradient(to_bottom,black,transparent_90%)]" />
         <div className="absolute -top-[200px] right-[-160px] aspect-square w-[min(620px,120vw)] rounded-full bg-[radial-gradient(circle,rgb(247_147_30/0.25)_0%,rgb(247_147_30/0.12)_35%,transparent_68%)] blur-2xl sm:right-[-80px]" />
       </div>
-      <Container className="relative">
-        <IntroAnimate className={visual ? undefined : "max-w-4xl"}>
+      <Container className={`relative ${aside ? "grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-center lg:gap-12" : ""}`}>
+        <IntroAnimate className={visual || aside ? "min-w-0" : "max-w-4xl"}>
           <nav aria-label="Breadcrumb" data-intro className="text-sm text-ink/65">
             <ol className="flex items-center gap-x-2 overflow-hidden whitespace-nowrap">
               <li className="shrink-0">
@@ -86,6 +88,7 @@ export function PageHeader({ breadcrumb, eyebrow, title, intro, children, visual
             </div>
           ) : null}
         </IntroAnimate>
+        {aside ? <div className="relative">{aside}</div> : null}
       </Container>
     </section>
   );

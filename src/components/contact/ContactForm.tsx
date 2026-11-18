@@ -85,7 +85,7 @@ export function ContactForm({ defaultCity = "", title = "Book a free site visit"
       const res = await fetch("/api/enquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "enquiry", ...fields }),
+        body: JSON.stringify({ type: "enquiry", ...fields, page: window.location.pathname }),
       });
       setStatus(res.ok ? "success" : "error");
     } catch {
