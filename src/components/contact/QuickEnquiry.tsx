@@ -40,7 +40,7 @@ export function QuickEnquiry({ service }: { service: string }) {
   }
 
   const input = (bad?: string) =>
-    `w-full rounded-card border bg-white px-3.5 py-2.5 text-base text-ink placeholder:text-ink/40 focus:border-sun focus:outline-none ${bad ? "border-akd" : "border-line"}`;
+    `w-full rounded-card border bg-white px-4 py-3 text-base text-ink placeholder:text-ink/40 focus:border-sun focus:outline-none ${bad ? "border-akd" : "border-line"}`;
 
   if (status === "done") {
     return (
@@ -55,12 +55,12 @@ export function QuickEnquiry({ service }: { service: string }) {
   }
 
   return (
-    <form onSubmit={submit} noValidate aria-labelledby="quick-enquiry-title" className="rounded-card border border-line bg-white/95 p-5 shadow-[0_20px_50px_-25px_rgb(10_23_48/0.35)] backdrop-blur sm:p-6">
-      <p id="quick-enquiry-title" className="font-display text-lg font-bold text-ink">
+    <form onSubmit={submit} noValidate aria-labelledby="quick-enquiry-title" className="rounded-card border border-line bg-white/95 p-5 shadow-[0_20px_50px_-25px_rgb(10_23_48/0.35)] backdrop-blur sm:p-7">
+      <p id="quick-enquiry-title" className="font-display text-xl font-bold text-ink">
         Get a free site visit
       </p>
       <p className="text-sm text-muted">For {service.toLowerCase()} solar. We call back within a day.</p>
-      <div className="mt-4 grid gap-3">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {(
           [
             ["name", "Your name", "text", "name"],
@@ -68,7 +68,7 @@ export function QuickEnquiry({ service }: { service: string }) {
             ["city", "City", "text", "address-level2"],
           ] as const
         ).map(([k, label, type, ac]) => (
-          <div key={k}>
+          <div key={k} className={k === "name" ? "sm:col-span-2" : undefined}>
             <label htmlFor={`qe-${k}`} className="sr-only">
               {label}
             </label>
@@ -111,7 +111,7 @@ export function QuickEnquiry({ service }: { service: string }) {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-sun px-5 font-semibold text-ink transition-colors hover:bg-[#e8850f] disabled:opacity-70"
+        className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-sun px-5 font-semibold text-ink transition-colors hover:bg-[#e8850f] disabled:opacity-70"
       >
         {status === "sending" ? "Sending…" : "Request a call back"}
         <Icon name="arrowRight" className="size-4" />
