@@ -6,6 +6,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 type Payload = {
   type?: "enquiry" | "newsletter";
+  form?: "full" | "quick";
   name?: string;
   phone?: string;
   email?: string;
@@ -85,6 +86,11 @@ export async function POST(request: Request) {
       if (!PHONE_RE.test(f.phone.replace(/\s/g, ""))) errors.push("phone");
       if (f.email && !EMAIL_RE.test(f.email)) errors.push("email");
       if (f.city.length < 2) errors.push("city");
+      if (data.form === "full") {
+        if (!f.email) errors.push("email");
+        if (!f.bill) errors.push("bill");
+        if (f.message.length < 5) errors.push("message");
+      }
       if (errors.length) return NextResponse.json({ ok: false, errors }, { status: 422 });
 
       await sendEmail(
