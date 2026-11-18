@@ -20,12 +20,9 @@ function validate(f: Fields): Errors {
   const phone = f.phone.replace(/[\s-]/g, "");
   if (!phone) e.phone = "Please enter your mobile number.";
   else if (!/^(?:\+?91)?[6-9]\d{9}$/.test(phone)) e.phone = "Enter a valid 10-digit Indian mobile number.";
-  if (!f.email.trim()) e.email = "Please enter your email.";
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.trim())) e.email = "That email address doesn't look right.";
+  if (f.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.trim())) e.email = "That email address doesn't look right.";
   if (f.city.trim().length < 2) e.city = "Please tell us your city.";
-  if (!f.bill) e.bill = "Please select your monthly bill range.";
-  if (f.message.trim().length < 5) e.message = "Please write a short message.";
-  else if (f.message.length > 1000) e.message = "Please keep your message under 1,000 characters.";
+  if (f.message.length > 1000) e.message = "Please keep your message under 1,000 characters.";
   return e;
 }
 
@@ -77,7 +74,7 @@ export function ContactForm({ defaultCity = "", title = "Book a free site visit"
     e.preventDefault();
     const errs = validate(fields);
     setErrors(errs);
-    setTouched({ name: true, phone: true, email: true, city: true, bill: true, message: true });
+    setTouched({ name: true, phone: true, email: true, city: true, message: true });
     const firstInvalid = (Object.keys(errs) as (keyof Fields)[])[0];
     if (firstInvalid) {
       formRef.current?.querySelector<HTMLElement>(`[name="${firstInvalid}"]`)?.focus();
@@ -88,7 +85,7 @@ export function ContactForm({ defaultCity = "", title = "Book a free site visit"
       const res = await fetch("/api/enquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "enquiry", form: "full", ...fields, page: window.location.pathname }),
+        body: JSON.stringify({ type: "enquiry", ...fields, page: window.location.pathname }),
       });
       setStatus(res.ok ? "success" : "error");
     } catch {
@@ -137,7 +134,7 @@ export function ContactForm({ defaultCity = "", title = "Book a free site visit"
         {title}
       </h2>
       <p className="mt-2 text-muted">
-        All fields are required. We never share your details.
+        Fields marked <span className="text-akd">*</span> are required. We never share your details.
       </p>
 
       <div className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -173,7 +170,7 @@ export function ContactForm({ defaultCity = "", title = "Book a free site visit"
             required
           />
         </Field>
-        <Field id="email" label="Email" required error={show("email")}>
+        <Field id="email" label="Email" hint="optional" error={show("email")}>
           <input
             id="email"
             name="email"
@@ -186,7 +183,6 @@ export function ContactForm({ defaultCity = "", title = "Book a free site visit"
             className={inputClass(!!show("email"))}
             aria-invalid={!!show("email")}
             aria-describedby={show("email") ? "email-error" : undefined}
-            required
           />
         </Field>
         <Field id="city" label="City" required error={show("city")}>
@@ -205,9 +201,9 @@ export function ContactForm({ defaultCity = "", title = "Book a free site visit"
             required
           />
         </Field>
-        <Field id="bill" label="Average monthly electricity bill" required error={show("bill")} className="sm:col-span-2">
+        <Field id="bill" label="Average monthly electricity bill" className="sm:col-span-2">
           <div className="relative">
-            <select id="bill" name="bill" required value={fields.bill} onChange={update("bill")} onBlur={blur("bill")} aria-invalid={!!show("bill")} aria-describedby={show("bill") ? "bill-error" : undefined} className={`${inputClass(!!show("bill"))} appearance-none pr-12`}>
+            <select id="bill" name="bill" value={fields.bill} onChange={update("bill")} className={`${inputClass(false)} appearance-none pr-12`}>
               <option value="">Select a range</option>
               {BILL_OPTIONS.map((o) => (
                 <option key={o} value={o}>
@@ -218,7 +214,7 @@ export function ContactForm({ defaultCity = "", title = "Book a free site visit"
             <Icon name="chevronDown" className="pointer-events-none absolute top-1/2 right-4 size-5 -translate-y-1/2 text-muted" />
           </div>
         </Field>
-        <Field id="message" label="Message" required error={show("message")} className="sm:col-span-2">
+        <Field id="message" label="Message" hint="optional" error={show("message")} className="sm:col-span-2">
           <textarea
             id="message"
             name="message"
@@ -230,7 +226,6 @@ export function ContactForm({ defaultCity = "", title = "Book a free site visit"
             className={`${inputClass(!!show("message"))} min-h-32 py-3`}
             aria-invalid={!!show("message")}
             aria-describedby={show("message") ? "message-error" : undefined}
-            required
           />
         </Field>
         {/* Honeypot for bots */}
